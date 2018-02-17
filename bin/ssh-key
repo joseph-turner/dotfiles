@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Print public SSH key to clipboard. Generate it if necessary
+
+# read "U?Enter your username: " "F?Enter rsa filename: " "SSH_U?Enter ssh user: "
+echo "Enter rsa filename: [id_rsa]"
+read F
+
+F="${F:=id_rsa}"
+RSA_FILE="$HOME/.ssh/$F"
+
+if [ ! -f "$RSA_FILE" ]; then
+
+  echo "Enter your username: [joseph.turner@accenture.com]"
+  read U
+
+  echo "Enter ssh user: [git]"
+  read SSH_U
+
+  U="${U:=joseph.turner@accenture.com}"
+  SSH_U="${SSH_U:=git}"
+
+  ssh-keygen -t rsa -b 4096 -f "$RSA_FILE" -C "$U"
+
+  cat << EOF >> "$HOME/.ssh/config"
+
+Host $RSA_HOST
+  HostName $RSA_HOST
+  IdentityFile $RSA_FILE
+  User $SSH_U
+EOF
+
+fi
+
+pbcopy < $RSA_FILE
+
+echo "Copied Public SSH key to clipboard!"
+
+unset U F SSH_U RSA_FILE g
+

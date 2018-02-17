@@ -1,0 +1,72 @@
+[alias]
+  amend     = commit -a --amend --reuse-message=HEAD
+  cm        = !git add -A && git commit -m
+  co        = checkout
+  cob       = checkout -b
+  df        = diff -w
+  ds        = diff --staged
+  ec        = config --global -e
+  ecl       = config --local -e
+  grep      = grep -Ii
+  lg        = log --graph --decorate --abbrev-commit --pretty=fuller --date=relative --name-status --branches
+  ls        = ls-files
+  mine      = !git lg --author=$(git config user.name) --branches
+  mnc       = merge --no-commit --no-ff
+  mt        = mergetool
+  rh        = reset --hard
+  rs        = reset --soft
+  pp        = !git pull --prune --all && git push --all
+  pu        = push -u origin HEAD
+  publish   = !git push -u origin $(git rev-parse --abbrev-ref HEAD)
+  slg       = log --graph --pretty=format:'%C(yellow)%h%Creset -%C(auto)%d%Creset %s %C(green)(%cr) %C(bold blue)<%an>%Creset'
+  st        = status -sb --ignore-submodules
+  undo      = reset HEAD~1 --mixed # resets the previous commit, but keeps all the changes from that commit
+  unpublish = !git push origin :$(git rev-parse --abbrev-ref HEAD)
+  up        = !git pull --all --prune #$@ && git submodule update --init --recursive
+
+[color]
+  ui = auto
+
+[color "branch"]
+  current   = yellow reverse
+  local     = yellow
+  remote    = green
+
+[color "status"]
+  added     = yellow
+  changed   = green
+  untracked = cyan
+
+[core]
+  editor    = code-insiders --wait
+  excludesfile = ~/.gitignore
+  fscache   = true
+  ignore    = dirty
+  preloadindex = true
+
+[credential]
+	helper = osxkeychain
+
+[diff]
+  tool = p4mergetool
+
+[difftool "p4mergetool"]
+  cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge "$LOCAL" "$REMOTE"
+
+[help]
+  autocorrect = 1
+
+[merge]
+  tool = p4mergetool
+
+[mergetool "p4mergetool"]
+  cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge "$PWD/$BASE" "$PWD/$LOCAL" "$PWD/$REMOTE" "$PWD/$MERGED"
+  trustExitCode = false
+
+[mergetool]
+  keepBackup = false
+
+# This is Git's per-user configuration file.
+[user]
+	name = Joseph Turner
+  email = iamjoeturner@gmail.com

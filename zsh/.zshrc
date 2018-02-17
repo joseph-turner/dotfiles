@@ -17,11 +17,57 @@ zsh_wifi_signal(){
     echo -n "%F{$color}\uf1eb" # \uf1eb is 
 }
 
+
 # =============================================================================
 #                                   Variables
 # =============================================================================
 export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
+export LC_ALL="$LANG"
+
+# Path to your oh-my-zsh installation.
+export ZSH=/Users/joseph.turner/.oh-my-zsh
+export NVM_DIR="$HOME/.nvm"
+
+# PATH
+# Directories to be prepended to $PATH
+declare -a dirs_to_prepend
+dirs_to_prepend=(
+  "/usr/local/sbin"
+  "/usr/local/"
+  # "$HOME/dotfiles/bin"
+  "$HOME/bin"
+  "$(brew --prefix coreutils)/libexec/gnubin" # Add brew-installed GNU core utilities bin
+  "$(brew --prefix)/share/npm/bin" # Add npm-installed package bin
+)
+
+# Explicitly configured $PATH
+PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
+for dir in ${(k)dirs_to_prepend[@]}
+do
+  if [ -d ${dir} ]; then
+    # If these directories exist, then prepend them to existing PATH
+    PATH="${dir}:$PATH"
+  fi
+done
+
+unset dirs_to_prepend
+
+export PATH
+
+
+export GIT_FRIENDLY_NO_BUNDLE=true
+# export GIT_FRIENDLY_NO_NPM=true
+export GIT_FRIENDLY_NO_YARN=true
+export GIT_FRIENDLY_NO_BOWER=true
+export GIT_FRIENDLY_NO_COMPOSER=true
+
+
+# =============================================================================
+#                              ZSH Theme Settings
+# =============================================================================
+ENABLE_CORRECTION="true"
+COMPLETION_WAITING_DOTS="true"
 
 DEFAULT_FOREGROUND=006 DEFAULT_BACKGROUND=235
 DEFAULT_COLOR=$DEFAULT_FOREGROUND
@@ -69,7 +115,7 @@ POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="╰\uF460 "
 
 #POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context ssh root_indicator dir_writable dir )
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir_writable dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time background_jobs status time ssh)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time background_jobs status time node_version ssh load battery)
 
 POWERLEVEL9K_VCS_CLEAN_BACKGROUND="green"
 POWERLEVEL9K_VCS_CLEAN_FOREGROUND="$DEFAULT_BACKGROUND"
@@ -139,6 +185,9 @@ POWERLEVEL9K_SSH_BACKGROUND="$(( $DEFAULT_BACKGROUND + 2 ))"
 POWERLEVEL9K_SSH_BACKGROUND="$(( $DEFAULT_BACKGROUND - 2 ))"
 POWERLEVEL9K_SSH_ICON="\uF489"  # 
 
+POWERLEVEL9K_NODE_VERSION_FOREGROUND="yellow"
+POWERLEVEL9K_NODE_VERSION_BACKGROUND="$(( $DEFAULT_BACKGROUND - 2 ))"
+
 POWERLEVEL9K_HOST_LOCAL_FOREGROUND="$DEFAULT_FOREGROUND"
 POWERLEVEL9K_HOST_LOCAL_BACKGROUND="$DEFAULT_BACKGROUND"
 POWERLEVEL9K_HOST_REMOTE_FOREGROUND="$DEFAULT_FOREGROUND"
@@ -185,6 +234,7 @@ ZSH_HIGHLIGHT_STYLES[bracket-level-2]="fg=green,bold"
 ZSH_HIGHLIGHT_STYLES[bracket-level-3]="fg=magenta,bold"
 ZSH_HIGHLIGHT_STYLES[bracket-level-4]="fg=yellow,bold"
 
+
 # =============================================================================
 #                                   Plugins
 # =============================================================================
@@ -193,45 +243,31 @@ ZSH_HIGHLIGHT_STYLES[bracket-level-4]="fg=yellow,bold"
 #source ~/.zplug/init.zsh && zplug update
 source ~/.zplug/init.zsh
 
-#zplug "b4b4r07/enhancd", use:init.sh
-zplug "b4b4r07/enhancd", use:enhancd.sh
-#zplug "b4b4r07/zsh-vimode-visual", defer:3
+zplug "b4b4r07/enhancd", use:init.sh
 zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
-#zplug "knu/zsh-manydots-magic", use:manydots-magic, defer:2
-zplug "seebi/dircolors-solarized", ignore:"*", as:plugin
 
-#zplug "plugins/bundler", from:oh-my-zsh, if:"which bundle"
 #zplug "plugins/colored-man-pages", from:oh-my-zsh
-#zplug "plugins/extract", from:oh-my-zsh
-#zplug "plugins/fancy-ctrl-z", from:oh-my-zsh
-#zplug "plugins/git", from:oh-my-zsh, if:"which git"
-#zplug "plugins/globalias", from:oh-my-zsh
-#zplug "plugins/gpg-agent", from:oh-my-zsh, if:"which gpg-agent"
-#zplug "plugins/httpie", from:oh-my-zsh, if:"which httpie"
-#zplug "plugins/nanoc", from:oh-my-zsh, if:"which nanoc"
-#zplug "plugins/vi-mode", from:oh-my-zsh
 
-zplug "plugins/git",    	from:oh-my-zsh, if:"which git"
+zplug "plugins/git",        from:oh-my-zsh, if:"which git"
 zplug "plugins/gitignore",  from:oh-my-zsh, if:"which git"
 zplug "plugins/git-extras", from:oh-my-zsh, if:"which git"
 zplug "plugins/git-flow",   from:oh-my-zsh, if:"which gitflow"
 
-zplug "plugins/node", 		from:oh-my-zsh, if:"which node"
-zplug "plugins/npm", 		from:oh-my-zsh, if:"which npm"
-zplug "plugins/yarn",		from:oh-my-zsh, if:"which yarn"
+zplug "plugins/node",       from:oh-my-zsh, if:"which node"
+zplug "plugins/npm",        from:oh-my-zsh, if:"which npm"
+zplug "plugins/yarn",       from:oh-my-zsh, if:"which yarn"
 
-zplug "plugins/sudo",   	from:oh-my-zsh, if:"which sudo"
+zplug "plugins/sudo",       from:oh-my-zsh, if:"which sudo"
 
 if [[ $OSTYPE = (darwin)* ]]; then
-	zplug "plugins/osx",      from:oh-my-zsh
-	zplug "plugins/brew",     from:oh-my-zsh, if:"which brew"
-	zplug "plugins/macports", from:oh-my-zsh, if:"which port"
+    zplug "plugins/osx",      from:oh-my-zsh
+    zplug "plugins/brew",     from:oh-my-zsh, if:"which brew"
 fi
 
 zplug "zsh-users/zsh-completions",              defer:0
 zplug "zsh-users/zsh-autosuggestions",          defer:2, on:"zsh-users/zsh-completions"
 zplug "zsh-users/zsh-syntax-highlighting",      defer:3, on:"zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-history-substring-search", defer:3, on:"zsh-users/zsh-syntax-highlighting"
+
 
 # =============================================================================
 #                                   Options
@@ -272,60 +308,6 @@ setopt pushd_minus              # Reference stack entries with "-".
 
 setopt extended_glob
 
-# =============================================================================
-#                                   Aliases
-# =============================================================================
-
-# In the definitions below, you will see use of function definitions instead of
-# aliases for some cases. We use this method to avoid expansion of the alias in
-# combination with the globalias plugin.
-
-# Directory coloring
-if [[ $OSTYPE = (darwin|freebsd)* ]]; then
-	export CLICOLOR="YES" # Equivalent to passing -G to ls.
-	export LSCOLORS="exgxdHdHcxaHaHhBhDeaec"
-
-	[ -d "/opt/local/bin" ] && export PATH="/opt/local/bin:$PATH"
-
-	# Prefer GNU version, since it respects dircolors.
-	if which gls &>/dev/null; then
-		alias ls='() { $(whence -p gls) -Ctr --file-type --color=auto $@ }'
-	else
-		alias ls='() { $(whence -p ls) -CFtr $@ }'
-	fi
-else
-	alias ls='() { $(whence -p ls) -Ctr --file-type --color=auto $@ }'
-fi
-
-# Set editor preference to nvim if available.
-if which nvim &>/dev/null; then
-	alias vim='() { $(whence -p nvim) $@ }'
-else
-	alias vim='() { $(whence -p vim) $@ }'
-fi
-
-# Generic command adaptations.
-alias grep='() { $(whence -p grep) --color=auto $@ }'
-alias egrep='() { $(whence -p egrep) --color=auto $@ }'
-
-# Directory management
-alias la='ls -a'
-alias ll='ls -l'
-alias lal='ls -al'
-alias d='dirs -v'
-alias 1='pu'
-alias 2='pu -2'
-alias 3='pu -3'
-alias 4='pu -4'
-alias 5='pu -5'
-alias 6='pu -6'
-alias 7='pu -7'
-alias 8='pu -8'
-alias 9='pu -9'
-alias pu='() { pushd $1 &> /dev/null; dirs -v; }'
-alias po='() { popd &> /dev/null; dirs -v; }'
-
-zshaddhistory() { whence ${${(z)1}[1]} >| /dev/null || return 1 }
 
 # =============================================================================
 #                                Key Bindings
@@ -351,6 +333,7 @@ bindkey "^i" expand-or-complete-prefix
 bindkey '^[^?' backward-kill-word
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
+
 
 # =============================================================================
 #                                 Completions
@@ -389,6 +372,11 @@ setup_agents() {
 	  unalias run_agents
     fi
   fi
+
+  # update and cleanup homebrew
+  if which brew &> /dev/null; then
+	( brew update > /dev/null 2>&1 & ) && ( brew outdated > /dev/null 2>&1 & ) && ( brew upgrade > /dev/null 2>&1 & ) && ( brew cleanup > /dev/null 2>&1 & )
+  fi
 }
 setup_agents
 unfunction setup_agents
@@ -403,16 +391,6 @@ fi
 
 # Then, source plugins and add commands to $PATH
 zplug load
-
-if zplug check "seebi/dircolors-solarized"; then
-  if which gdircolors &> /dev/null; then
-	alias dircolors='() { $(whence -p gdircolors) }'
-  fi
-  if which dircolors &> /dev/null; then
-    scheme="dircolors.256dark"
-    eval $(dircolors ~/.zplug/repos/seebi/dircolors-solarized/$scheme)
-  fi
-fi
 
 # History
 if zplug check "zsh-users/zsh-history-substring-search"; then
@@ -432,9 +410,12 @@ fi
 [[ -f ~/.zsh_functions ]] && source ~/.zsh_functions
 [[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
 
-#autoload -Uz compinit
-#compinit
 
-#ZLE_RPROMPT_INDENT=0
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+# Optionally, if you set this to "random", it'll load a random theme each
+# time that oh-my-zsh is loaded.
+# ZSH_THEME="powerlevel9k/powerlevel9k"
 
-# vim: ft=zsh
+source "$ZSH/oh-my-zsh.sh"
+source "$(brew --prefix nvm)/nvm.sh"
