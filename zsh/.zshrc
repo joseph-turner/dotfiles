@@ -33,7 +33,7 @@ export NVM_DIR="$HOME/.nvm"
 declare -a dirs_to_prepend
 dirs_to_prepend=(
   "/usr/local/sbin"
-  "/usr/local/"
+  "/usr/local"
   # "$HOME/dotfiles/bin"
   "$HOME/bin"
   "$(brew --prefix coreutils)/libexec/gnubin" # Add brew-installed GNU core utilities bin
@@ -43,8 +43,7 @@ dirs_to_prepend=(
 # Explicitly configured $PATH
 PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
-for dir in ${(k)dirs_to_prepend[@]}
-do
+for dir in ${(k)dirs_to_prepend[@]}; do
   if [ -d ${dir} ]; then
     # If these directories exist, then prepend them to existing PATH
     PATH="${dir}:$PATH"
@@ -66,6 +65,8 @@ export GIT_FRIENDLY_NO_COMPOSER=true
 # =============================================================================
 #                              ZSH Theme Settings
 # =============================================================================
+export TERM="xterm-256color"
+
 ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
 

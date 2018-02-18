@@ -9,6 +9,7 @@ brew tap caskroom/versions
 casks=(
 
   adobe-creative-cloud
+  bettertouchtool
   betterzip # Note: The BetterZipQL plugin was integrated with the BetterZip app.
   dropbox
   firefox
@@ -33,13 +34,13 @@ casks=(
 
   # Quick Look Plugins (https://github.com/sindresorhus/quick-look-plugins)
   qlcolorcode # Preview source code files with syntax highlighting
-  qlstephen # Preview plain text files without or with unknown file extension. Example: README, CHANGELOG, index.styl, etc.
-  qlmarkdown # Preview Markdown files
-  quicklook-json # Preview JSON files
   qlimagesize # Display image size and resolution
-  webpquicklook # Preview WebP images
-  quicklookase # Preview Adobe ASE Color Swatches generated with Adobe Photoshop, Adobe Illustrator, Adobe Color CC, Spectrum, COLOURlovers, Prisma, among many others.
+  qlmarkdown # Preview Markdown files
+  qlstephen # Preview plain text files without or with unknown file extension. Example: README, CHANGELOG, index.styl, etc.
   qlvideo # Preview most types of video files, as well as their thumbnails, cover art and metadata
+  quicklook-json # Preview JSON files
+  quicklookase # Preview Adobe ASE Color Swatches generated with Adobe Photoshop, Adobe Illustrator, Adobe Color CC, Spectrum, COLOURlovers, Prisma, among many others.
+  webpquicklook # Preview WebP images
 
   # FONTS
   # Patched by Nerd Font
@@ -50,7 +51,7 @@ casks=(
 
 casks_to_install=()
 for i in ${casks[@]}; do
-  brew cask list $i 2> /dev/null || casks_to_install+=($i)
+  brew cask list $i &> /dev/null && echo "Cask $i already installed!" || casks_to_install+=($i)
 done
 
 if [[ ${casks_to_install[@]} ]]; then

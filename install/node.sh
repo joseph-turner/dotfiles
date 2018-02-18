@@ -13,9 +13,9 @@
 #     ./node_modules/.bin/webpack --config webpack.local.config.js
 #
 
-if test ! $(which nvm)
-then
-  echo "Installing a stable version of Node..."
+if [[ -d "$HOME/.nvm" && -f "/usr/local/opt/nvm/nvm.sh" ]]; then
+  source "/usr/local/opt/nvm/nvm.sh"
+  echo "Installing the most recent LTS version of Node..."
 
   # Install the latest stable version of node
   nvm install --lts
@@ -25,6 +25,9 @@ then
 
   # Use the stable version of node by default
   nvm alias default "lts/*"
+
+else
+  echo "NVM not installed. Run `brew.sh` or `brew install nvm`"
 fi
 
 # All `npm install <pkg>` commands will pin to the version that was available at the time you run the command
@@ -38,12 +41,22 @@ npm config set save-exact = true
 # diff-so-fancy — sexy git diffs
 # git-recent — Type `git recent` to see your recent local git branches
 # git-open — Type `git open` to open the GitHub page or website for a repository
-packages=(
-    diff-so-fancy
-    git-recent
-    git-open
 
-    trash-cli # trash as the safe `rm` alternative
-)
+packages=()
 
-npm install -g "${packages[@]}"
+if [[ ${packages[@]} ]]; then
+  printf "Installing global NPM packages:%s\n" "${packages[@]}"
+  packages_to_install=()
+  for i in ${packages[@]}; do
+    npm ls -g "$i" &> /dev/null && echo "Package $i already installed!" || packages_to_install+=($i)
+  done
+
+  if [[ ${packages_to_install[@]} ]]; then
+    npm install -g "${packages_to_install[@]}"
+  else
+    echo "All Node packages already installed!"
+  fi
+else
+  echo "No packages listed for installation."
+  npm ls -gp --depth=0 | awk -F/ '/node_modules/ && !/\/npm$/ {print $NF}' | xargs npm -g rm
+fi

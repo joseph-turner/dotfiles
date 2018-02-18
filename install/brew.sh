@@ -27,15 +27,28 @@ brew upgrade
 # of installing Node directly. This gives me more explicit control over
 # which version I'm using.
 
-apps=(
-    nvm
-    git
-    git-extras
-    git-flow
-    tree
+formulae=(
+  git
+  git-extras
+  git-flow
+  htop
+  nvm
+  speedtest_cli
+  tmux
+  trash
+  tree
 )
 
-brew install "${apps[@]}"
+formulae_to_install=()
+for i in ${formulae[@]}; do
+  brew list $i &> /dev/null && echo "Formula $i already installed!" || formulae_to_install+=($i)
+done
+
+if [[ ${formulae_to_install[@]} ]]; then
+  brew install "${formulae_to_install[@]}"
+else
+  echo "All formulae already installed!"
+fi
 
 # Remove outdated versions from the cellar
 brew cleanup

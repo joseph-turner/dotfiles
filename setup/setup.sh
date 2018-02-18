@@ -125,7 +125,7 @@ print_success() {
 
 # Warn user this script will overwrite current dotfiles
 while true; do
-  read -p "Warning: this will overwrite your current dotfiles. Continue? [y/n] " yn
+  read -n1 -p "Warning: this will overwrite your current dotfiles. Continue? [y/n] " yn
   case $yn in
     [Yy]* ) break;;
     [Nn]* ) exit;;
@@ -136,9 +136,8 @@ done
 # Get the dotfiles directory's absolute path
 SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd -P)"
 DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
+CURRENT_DIR="$(pwd)"
 
-
-dir=~/dotfiles                        # dotfiles directory
 dir_backup=~/dotfiles_old             # old dotfiles backup directory
 
 # Get current dir (so run this script from anywhere)
@@ -154,7 +153,8 @@ if [ ! -d $dir_backup ]; then
 fi
 
 # Change to the dotfiles directory
-echo -n "Changing to the $DOTFILES_DIR directory..."
+echo -n "
+Changing to the $DOTFILES_DIR directory..."
 cd $DOTFILES_DIR
 echo "done"
 
@@ -297,14 +297,17 @@ install_zsh () {
 
 # Package managers & packages
 
-. "$DOTFILES_DIR/install/brew.sh"
-. "$DOTFILES_DIR/install/brew-cask.sh"
-. "$DOTFILES_DIR/install/npm.sh"
+# . "$DOTFILES_DIR/install/brew.sh"
+# . "$DOTFILES_DIR/install/brew-cask.sh"
+. "$DOTFILES_DIR/install/node.sh"
 
 
 main
 zsh_sources
 # install_zsh
+
+cd $CURRENT_DIR
+unset CURRENT_DIR
 
 echo "Sourcing ~/.zshrc"
 # Change to zsh to source .zshrc

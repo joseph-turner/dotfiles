@@ -29,3 +29,11 @@ function gz() {
   printf "orig: %d bytes\n" "$origsize";
   printf "gzip: %d bytes (%2.2f%%)\n" "$gzipsize" "$ratio";
 }
+
+function update() {
+  echo "Updated and cleaning up homebrew stuff"
+  brew update && brew upgrade && brew prune && brew cleanup;
+
+  echo "Installing latest LTS version of Node"
+  nvm install --lts
+}
