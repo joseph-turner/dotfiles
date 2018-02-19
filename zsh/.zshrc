@@ -63,6 +63,29 @@ export GIT_FRIENDLY_NO_COMPOSER=true
 
 
 # =============================================================================
+#                                   Sources
+# =============================================================================
+
+sources=(
+  "$ZSH/oh-my-zsh.sh"
+  "$(brew --prefix nvm)/nvm.sh"
+  "~/.zshrc.local"
+  "~/.zsh_functions"
+  "~/.zsh_aliases"
+)
+
+for i in ${sources[@]}; do
+  [[ -f $i ]] && source $i
+done
+# Source local zsh customizations.
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+# Source functions and aliases.
+[[ -f ~/.zsh_functions ]] && source ~/.zsh_functions
+[[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
+
+
+# =============================================================================
 #                              ZSH Theme Settings
 # =============================================================================
 export TERM="xterm-256color"
@@ -268,6 +291,7 @@ fi
 zplug "zsh-users/zsh-completions",              defer:0
 zplug "zsh-users/zsh-autosuggestions",          defer:2, on:"zsh-users/zsh-completions"
 zplug "zsh-users/zsh-syntax-highlighting",      defer:3, on:"zsh-users/zsh-autosuggestions"
+zplug "zsh-users/zsh-history-substring-search",  defer:3, on:"zsh-users/zsh-syntax-highlighting"
 
 
 # =============================================================================
@@ -402,21 +426,3 @@ if zplug check "zsh-users/zsh-history-substring-search"; then
 	bindkey "^[[1;5B" history-substring-search-down
 fi
 
-[ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
-
-# Source local zsh customizations.
-[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
-
-# Source functions and aliases.
-[[ -f ~/.zsh_functions ]] && source ~/.zsh_functions
-[[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
-
-
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-# ZSH_THEME="powerlevel9k/powerlevel9k"
-
-source "$ZSH/oh-my-zsh.sh"
-source "$(brew --prefix nvm)/nvm.sh"
