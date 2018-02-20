@@ -66,24 +66,24 @@ export GIT_FRIENDLY_NO_COMPOSER=true
 #                                   Sources
 # =============================================================================
 
+# This allows both the symlinked ~/.zshrc as well as it's target file to be sourced
+if [[ -L $0 ]]; then
+  ZSH_SOURCES_DIR=$(dirname $(readlink $0))
+else
+  ZSH_SOURCES_DIR=$(dirname $0)
+fi
+
 sources=(
   "$ZSH/oh-my-zsh.sh"
   "$(brew --prefix nvm)/nvm.sh"
   "~/.zshrc.local"
-  "~/.zsh_functions"
-  "~/.zsh_aliases"
+  "$ZSH_SOURCES_DIR/functions.zsh"
+  "$ZSH_SOURCES_DIR/aliases.zsh"
 )
 
 for i in ${sources[@]}; do
   [[ -f $i ]] && source $i
 done
-# Source local zsh customizations.
-[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
-
-# Source functions and aliases.
-[[ -f ~/.zsh_functions ]] && source ~/.zsh_functions
-[[ -f ~/.zsh_aliases ]] && source ~/.zsh_aliases
-
 
 # =============================================================================
 #                              ZSH Theme Settings
