@@ -32,6 +32,7 @@ alias firefox="/Applications/Firefox.app/Contents/MacOS/firefox"
 alias ci="code-insiders"
 
 alias hosts="ci"
-alias config="ci ${0:a:h}"
+alias config="ci $(dirname ${0:a:h})"
+alias dotfiles="cd $(dirname ${0:a:h}) && config"
 alias reload="source ~/.zshrc"
 

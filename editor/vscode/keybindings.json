@@ -1,0 +1,35 @@
+// Place your key bindings in this file to overwrite the defaults
+[
+    {
+        "key": "ctrl+shift+w",
+        "command": "editor.emmet.action.wrapWithAbbreviation"
+    },
+    {
+      "key": "ctrl+`",
+      "command": "terminalTabs.createTerminal"
+    },
+    {
+      "key": "ctrl+shift+`",
+      "command": "terminalTabs.createNamedTerminal"
+    },
+    {
+      "key": "ctrl+1",
+      "command": "terminalTabs.showTerminal1"
+    },
+    {
+      "key": "ctrl+2",
+      "command": "terminalTabs.showTerminal2"
+    },
+    {
+      "key": "ctrl+3",
+      "command": "terminalTabs.showTerminal3"
+    },
+    {
+      "key": "ctrl+4",
+      "command": "terminalTabs.showTerminal4"
+    },
+    {
+      "key": "ctrl+5",
+      "command": "terminalTabs.showTerminal5"
+    }
+  ]

@@ -8,6 +8,7 @@ brew tap caskroom/versions
 # Install packages
 casks=(
 
+  # Installers and apps
   adobe-creative-cloud
   bettertouchtool
   betterzip # Note: The BetterZipQL plugin was integrated with the BetterZip app.
@@ -30,7 +31,7 @@ casks=(
   suspicious-package # Preview the contents of a standard Apple installer package
   ubersicht
   virtualbox
-  visual-studio-code
+  visual-studio-code-insiders
 
   # Quick Look Plugins (https://github.com/sindresorhus/quick-look-plugins)
   qlcolorcode # Preview source code files with syntax highlighting

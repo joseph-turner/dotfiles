@@ -125,7 +125,7 @@ print_success() {
 
 # Warn user this script will overwrite current dotfiles
 while true; do
-  read -n1 -p "Warning: this will overwrite your current dotfiles. Continue? [y/n] " yn
+  read -n1 -p "Warning: this will overwrite your current dotfiles. Continue? [y/n]" yn
   case $yn in
     [Yy]* ) break;;
     [Nn]* ) exit;;
@@ -136,21 +136,28 @@ done
 # Get the dotfiles directory's absolute path
 SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd -P)"
 DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
+# Get current dir (to return to it later)
 CURRENT_DIR="$(pwd)"
 
 dir_backup=~/dotfiles_old             # old dotfiles backup directory
 
-# Get current dir (so run this script from anywhere)
-
 export DOTFILES_DIR
-# DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Create dotfiles_old in homedir
-if [ ! -d $dir_backup ]; then
-  echo -n "Creating $dir_backup for backup of any existing dotfiles in ~..."
-  mkdir -p $dir_backup
-  echo "done"
-fi
+backup() {
+  # Create dotfiles_old in homedir
+  if [ ! -d $dir_backup ]; then
+    echo -n "Creating $dir_backup for backup of any existing dotfiles in ~..."
+    mkdir -p $dir_backup
+    echo "done"
+  fi
+
+  # Move any existing dotfiles in homedir to dotfiles_old directory, then create symlinks from the homedir to any files in the ~/dotfiles directory specified in $files
+
+  for i in ${FILES_TO_SYMLINK[@]}; do
+    echo "Moving any existing dotfiles from ~ to $dir_backup"
+    mv ~/${i##*/} $dir_backup
+  done
+}
 
 # Change to the dotfiles directory
 echo -n "
@@ -158,52 +165,29 @@ Changing to the $DOTFILES_DIR directory..."
 cd $DOTFILES_DIR
 echo "done"
 
-#
-# Actual symlink stuff
-#
 
+# =============================================================================
+#                           SYMLINK SETUP
+# =============================================================================
 
-# Atom editor settings
-if [[ -d ~/.atom ]]; then
-  echo -n "Copying Atom settings.."
-  mv -f ~/.atom ~/dotfiles_old/
-  ln -s $HOME/dotfiles/atom ~/.atom
-  echo "done"
-fi
+symlink_files() {
 
+  declare -a FILES_TO_SYMLINK=(
 
-declare -a FILES_TO_SYMLINK=(
+    'editor/.editorconfig'
+    'editor/.eslintrc'
 
-  'editor/.editorconfig'
-  'editor/.eslintrc'
+  #   'git/.gitattributes'
+    'git/.gitconfig'
+    'git/.gitignore'
 
-#   'git/.gitattributes'
-  'git/.gitconfig'
-  'git/.gitignore'
+    'zsh/.zshrc'
 
-  'zsh/.zshrc'
-
-)
-
-# FILES_TO_SYMLINK="$FILES_TO_SYMLINK .vim bin" # add in vim and the binaries
-
-# Move any existing dotfiles in homedir to dotfiles_old directory, then create symlinks from the homedir to any files in the ~/dotfiles directory specified in $files
-
-for i in ${FILES_TO_SYMLINK[@]}; do
-  echo "Moving any existing dotfiles from ~ to $dir_backup"
-  mv ~/${i##*/} $dir_backup
-done
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-main() {
+  )
 
   local i=''
   local sourceFile=''
   local targetFile=''
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   for i in ${FILES_TO_SYMLINK[@]}; do
 
@@ -227,9 +211,12 @@ main() {
   done
 
   unset FILES_TO_SYMLINK
+}
+
+symlink_binaries() {
 
   # Copy binaries
-  ln -fs $HOME/dotfiles/bin $HOME
+  ln -fs $DOTFILES_DIR/bin $HOME
 
   declare -a BINARIES=(
     'ssh-key'
@@ -255,24 +242,36 @@ main() {
     chmod +rwx $DOTFILES_DIR/$i
   done
 
-  # # Symlink online-check.sh
-  # ln -fs $HOME/dotfiles/lib/online-check.sh $HOME/online-check.sh
-
-  # # Write out current crontab
-  # crontab -l > mycron
-  # # Echo new cron into cron file
-  # echo "* * * * * ~/online-check.sh" >> mycron
-  # # Install new cron file
-  # crontab mycron
-  # rm mycron
-
 }
 
-zsh_sources () {
-  find $DOTFILES_DIR -name "*.zsh" | while read file; do
-    echo "Sourcing zsh files :: '$file'"
-    source "$file"
-  done
+symlink_editor_settings() {
+  # Atom editor settings
+  if [[ -d ~/.atom ]]; then
+    echo -n "Copying Atom settings.."
+    mv -f ~/.atom ~/dotfiles_old/
+    ln -s $HOME/dotfiles/atom ~/.atom
+    echo "done"
+  fi
+
+  # Visual Studio Code - Insiders
+  vsci_user_dir="$HOME/Library/Application Support/Code - Insiders/User"
+  # cd "$vsci_user_dir"
+  if [[ -d "$vsci_user_dir" ]]; then
+    echo "VS Code - Insiders: Backing up default user settings"
+    [[ -d  "$vsci_user_dir/backups" ]] || mkdir -p "$vsci_user_dir/backups"
+
+    declare -a editor_files=(
+      "snippets"
+      "keybindings.json"
+      "settings.json"
+    )
+
+    for i in ${editor_files[@]}; do
+      mv -f "$vsci_user_dir/$i" "$vsci_user_dir/backups"
+      echo "Linking VS Code - Insiders settings"
+      ln -s "$DOTFILES_DIR/editor/vscode/$i" "$vsci_user_dir/$i"
+    done
+  fi
 }
 
 install_zsh () {
@@ -283,8 +282,11 @@ install_zsh () {
       sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
     fi
     # Set the default shell to zsh if it isn't currently set to zsh
-    if [[ ! $(echo $SHELL) == $(which zsh) ]]; then
-      chsh -s $(which zsh)
+    zsh_path=$(which zsh)
+    if [[ ! $(grep "zsh" $SHELL) ]]; then
+      # If this zsh is not listed as a standard shell, add it to the list
+      grep -q -F "$zsh_path" "/etc/shells" || sudo -v echo "$zsh_path" >> "/etc/shells"
+      chsh -s "$zsh_path" && SHELL="$zsh_path"
     fi
   else
     # If zsh isn't installed, get the platform of the current machine
@@ -295,18 +297,19 @@ install_zsh () {
   fi
 }
 
+# Symlink files and binaries
+symlink_files
+symlink_binaries
+
 # Package managers & packages
+"$DOTFILES_DIR/install/brew.sh"
+"$DOTFILES_DIR/install/brew-cask.sh"
+"$DOTFILES_DIR/install/node.sh"
 
-# . "$DOTFILES_DIR/install/brew.sh"
-# . "$DOTFILES_DIR/install/brew-cask.sh"
-. "$DOTFILES_DIR/install/node.sh"
+symlink_editor_settings
+install_zsh
 
-
-main
-zsh_sources
-# install_zsh
-
-cd $CURRENT_DIR
+cd "$CURRENT_DIR"
 unset CURRENT_DIR
 
 echo "Sourcing ~/.zshrc"
@@ -314,3 +317,5 @@ echo "Sourcing ~/.zshrc"
 exec zsh
 # Reload zsh settings
 source ~/.zshrc
+
+exit

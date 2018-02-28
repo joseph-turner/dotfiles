@@ -66,24 +66,40 @@ export GIT_FRIENDLY_NO_COMPOSER=true
 #                                   Sources
 # =============================================================================
 
-# This allows both the symlinked ~/.zshrc as well as it's target file to be sourced
-if [[ -L $0 ]]; then
-  ZSH_SOURCES_DIR=$(dirname $(readlink $0))
-else
-  ZSH_SOURCES_DIR=$(dirname $0)
-fi
-
+# List of files that need to be sourced outside of the dotfiles dir
 sources=(
   "$ZSH/oh-my-zsh.sh"
   "$(brew --prefix nvm)/nvm.sh"
   "~/.zshrc.local"
-  "$ZSH_SOURCES_DIR/functions.zsh"
-  "$ZSH_SOURCES_DIR/aliases.zsh"
+  "~/.iterm2_shell_integration.zsh"
 )
 
+# This allows both the symlinked ~/.zshrc as well as it's target file to be sourced
+if [[ -L $0 ]]; then
+  ZSH_SOURCES_DIR=$(dirname $(readlink $0))
+elif [[ -e $0 ]]; then
+  ZSH_SOURCES_DIR=$(dirname $0)
+elif [[ -L $HOME/.zshrc ]]; then
+  # Hardcoded path to zshrc for iTerm
+  ZSH_SOURCES_DIR=$(dirname $(readlink $HOME/.zshrc))
+fi
+
+# This will grab all of the zsh files in the $DOTFILES_DIR/zsh folder
+if [[ $ZSH_SOURCES_DIR ]]; then
+  while IFS= read -r -d $'\0'; do
+    sources+=("$REPLY")
+  done < <(find $ZSH_SOURCES_DIR -name "*.zsh" -print0)
+fi
+
+# If the file exists, source it
 for i in ${sources[@]}; do
-  [[ -f $i ]] && source $i
+  [[ -f $i ]] &&\
+  # echo "sourcing $i" &&\
+  source $i
 done
+
+unset sources
+
 
 # =============================================================================
 #                              ZSH Theme Settings
@@ -135,7 +151,7 @@ POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
 #POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%F{008}> %f"
 
 POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX="╭"
-POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="╰\uF460 "
+POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="╰\uF460%F{cyan}\uF054%f "
 
 #POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context ssh root_indicator dir_writable dir )
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir_writable dir vcs)
@@ -169,7 +185,7 @@ POWERLEVEL9K_STATUS_ERROR_BACKGROUND="$(( $DEFAULT_BACKGROUND + 2 ))"
 
 POWERLEVEL9K_HISTORY_FOREGROUND="$DEFAULT_FOREGROUND"
 
-POWERLEVEL9K_TIME_FORMAT="%D{%T \uF017}" #  15:29:33
+POWERLEVEL9K_TIME_FORMAT="%D{%T \uF017}" # 15:29:33 
 POWERLEVEL9K_TIME_FOREGROUND="$DEFAULT_FOREGROUND"
 POWERLEVEL9K_TIME_BACKGROUND="$DEFAULT_BACKGROUND"
 

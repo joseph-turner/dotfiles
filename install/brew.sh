@@ -41,6 +41,7 @@ formulae=(
 
 formulae_to_install=()
 for i in ${formulae[@]}; do
+  # Only try to install the ones that aren't already installed
   brew list $i &> /dev/null && echo "Formula $i already installed!" || formulae_to_install+=($i)
 done
 

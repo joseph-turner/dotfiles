@@ -1,0 +1,30 @@
+{
+  "atomKeymap.promptV3Features": true,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.formatOnPaste": true,
+  "terminal.integrated.fontFamily": "SourceCodePro Nerd Font Mono",
+  "terminal.integrated.fontSize": 15,
+  "workbench.colorTheme": "TwoStones",
+  "workbench.iconTheme": "vscode-icons",
+  "vsicons.projectDetection.autoReload": true,
+  "files": {
+    "associations": {},
+    "exclude": {
+      "**/.git": false,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true
+    }
+  },
+  "files.associations": {
+  },
+  "editor.renderWhitespace": "all",
+  "editor.fontFamily": "'SourceCodePro Nerd Font Mono', Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontSize": 14,
+  "editor.wordWrap": "on",
+  "explorer.confirmDragAndDrop": false,
+  "liveServer.settings.CustomBrowser": "chrome",
+  "liveServer.settings.ChromeDebuggingAttachment": true,
+  "liveServer.settings.donotShowInfoMsg": true
+}
