@@ -74,15 +74,7 @@ sources=(
   "~/.iterm2_shell_integration.zsh"
 )
 
-# This allows both the symlinked ~/.zshrc as well as it's target file to be sourced
-if [[ -L $0 ]]; then
-  ZSH_SOURCES_DIR=$(dirname $(readlink $0))
-elif [[ -e $0 ]]; then
-  ZSH_SOURCES_DIR=$(dirname $0)
-elif [[ -L $HOME/.zshrc ]]; then
-  # Hardcoded path to zshrc for iTerm
-  ZSH_SOURCES_DIR=$(dirname $(readlink $HOME/.zshrc))
-fi
+ZSH_SOURCES_DIR=$(dirname $(readlink $HOME/.zshrc))
 
 # This will grab all of the zsh files in the $DOTFILES_DIR/zsh folder
 if [[ $ZSH_SOURCES_DIR ]]; then
@@ -93,9 +85,12 @@ fi
 
 # If the file exists, source it
 for i in ${sources[@]}; do
-  [[ -f $i ]] &&\
-  # echo "sourcing $i" &&\
-  source $i
+  if [[ -f $i ]]; then
+    # echo "sourcing $i"
+    source $i
+  else
+    # echo "$i not found"
+  fi
 done
 
 unset sources
@@ -293,6 +288,7 @@ zplug "plugins/gitignore",  from:oh-my-zsh, if:"which git"
 zplug "plugins/git-extras", from:oh-my-zsh, if:"which git"
 zplug "plugins/git-flow",   from:oh-my-zsh, if:"which gitflow"
 
+zplug "plugins/ng",         from:oh-my-zsh, if:"which ng"
 zplug "plugins/node",       from:oh-my-zsh, if:"which node"
 zplug "plugins/npm",        from:oh-my-zsh, if:"which npm"
 zplug "plugins/yarn",       from:oh-my-zsh, if:"which yarn"
@@ -398,29 +394,6 @@ zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}
 # =============================================================================
 #                                   Startup
 # =============================================================================
-
-# Load SSH and GPG agents via keychain.
-setup_agents() {
-  [[ $UID -eq 0 ]] && return
-
-  if which keychain &> /dev/null; then
-	local -a ssh_keys gpg_keys
-	for i in ~/.ssh/**/*pub; do test -f "$i(.N:r)" && ssh_keys+=("$i(.N:r)"); done
-	gpg_keys=$(gpg -K --with-colons 2>/dev/null | awk -F : '$1 == "sec" { print $5 }')
-    if (( $#ssh_keys > 0 )) || (( $#gpg_keys > 0 )); then
-	  alias run_agents='() { $(whence -p keychain) --quiet --eval --inherit any-once --agents ssh,gpg $ssh_keys ${(f)gpg_keys} }'
-	  [[ -t ${fd:-0} || -p /dev/stdin ]] && eval `run_agents`
-	  unalias run_agents
-    fi
-  fi
-
-  # update and cleanup homebrew
-  if which brew &> /dev/null; then
-	( brew update > /dev/null 2>&1 & ) && ( brew outdated > /dev/null 2>&1 & ) && ( brew upgrade > /dev/null 2>&1 & ) && ( brew cleanup > /dev/null 2>&1 & )
-  fi
-}
-setup_agents
-unfunction setup_agents
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check; then

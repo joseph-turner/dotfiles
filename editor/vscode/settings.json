@@ -1,30 +1,39 @@
 {
   "atomKeymap.promptV3Features": true,
-  "editor.multiCursorModifier": "ctrlCmd",
-  "editor.formatOnPaste": true,
-  "terminal.integrated.fontFamily": "SourceCodePro Nerd Font Mono",
-  "terminal.integrated.fontSize": 15,
-  "workbench.colorTheme": "TwoStones",
-  "workbench.iconTheme": "vscode-icons",
-  "vsicons.projectDetection.autoReload": true,
-  "files": {
-    "associations": {},
-    "exclude": {
-      "**/.git": false,
-      "**/.svn": true,
-      "**/.hg": true,
-      "**/CVS": true,
-      "**/.DS_Store": true
-    }
-  },
-  "files.associations": {
-  },
-  "editor.renderWhitespace": "all",
+  "colorize.activate_variables_support_beta": true,
   "editor.fontFamily": "'SourceCodePro Nerd Font Mono', Menlo, Monaco, 'Courier New', monospace",
   "editor.fontSize": 14,
+  "editor.fontWeight": "300",
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.renderWhitespace": "all",
   "editor.wordWrap": "on",
   "explorer.confirmDragAndDrop": false,
-  "liveServer.settings.CustomBrowser": "chrome",
+  "files.associations": {},
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/.git": false,
+    "**/.hg": true,
+    "**/.svn": true,
+    "**/CVS": true
+  },
+  "gitlens.codeLens.scopes": [
+    "blocks",
+    "containers"
+  ],
+  "gitlens.keymap": "alternate",
   "liveServer.settings.ChromeDebuggingAttachment": true,
-  "liveServer.settings.donotShowInfoMsg": true
+  "liveServer.settings.CustomBrowser": "chrome",
+  "liveServer.settings.donotShowInfoMsg": true,
+  "liveServer.settings.donotVerifyTags": true,
+  "scss.lint.duplicateProperties": "warning",
+  "scss.lint.idSelector": "ignore",
+  "scss.lint.zeroUnits": "warning",
+  "scss.showErrors": true,
+  "terminal.integrated.fontFamily": "SourceCodePro Nerd Font Mono",
+  "terminal.integrated.fontSize": 15,
+  "vsicons.projectDetection.autoReload": true,
+  "window.zoomLevel": -1,
+  "workbench.colorTheme": "JetJet",
+  "workbench.iconTheme": "vscode-icons",
+  "explorer.confirmDelete": false
 }

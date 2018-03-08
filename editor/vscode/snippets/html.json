@@ -1,0 +1,40 @@
+{
+	// Place your snippets for html here. Each snippet is defined under a snippet name and has a prefix, body and
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the
+	// same ids are connected.
+	// "Print to console": {
+    // Example:
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+
+  "todo": {
+    "prefix": "todo",
+    "body": "<!-- TODO: $0 -->"
+  },
+  "fixme": {
+    "prefix": "fix",
+    "body": "<!-- FIXME: $0 -->"
+  },
+  "hack": {
+    "prefix": "hack",
+    "body": "<!-- HACK: $0 -->"
+  },
+  "note": {
+    "prefix": "note",
+    "body": "<!-- NOTE: $0 -->"
+  },
+  "review": {
+    "prefix": "review",
+    "body": "<!-- REVIEW: $0 -->"
+  },
+  "debug": {
+    "prefix": "debug",
+    "body": "<!-- DEBUG: $0 -->"
+  }
+}

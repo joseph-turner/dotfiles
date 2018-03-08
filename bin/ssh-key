@@ -17,6 +17,9 @@ if [ ! -f "$RSA_FILE" ]; then
   echo "Enter ssh user: [git]"
   read SSH_U
 
+  echo "Enter the Hostname"
+  read RSA_HOST
+
   U="${U:=joseph.turner@accenture.com}"
   SSH_U="${SSH_U:=git}"
 
@@ -32,9 +35,9 @@ EOF
 
 fi
 
-pbcopy < $RSA_FILE
+pbcopy < $RSA_FILE.pub
 
 echo "Copied Public SSH key to clipboard!"
 
-unset U F SSH_U RSA_FILE g
+unset U F SSH_U RSA_FILE
 
