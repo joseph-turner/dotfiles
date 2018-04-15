@@ -36,5 +36,13 @@
   "debug": {
     "prefix": "debug",
     "body": "/* DEBUG: $0 */"
+  },
+  "media": {
+    "prefix": "media",
+    "body": [
+      "@media ${1:screen and (${2:min-width}: $3)} {",
+      "\t$0",
+      "}"
+    ]
   }
 }

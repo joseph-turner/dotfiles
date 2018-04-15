@@ -12,17 +12,16 @@ casks=(
   adobe-creative-cloud
   bettertouchtool
   betterzip # Note: The BetterZipQL plugin was integrated with the BetterZip app.
+  docker
   dropbox
   firefox
   franz
   google-backup-and-sync
   google-chrome
-  google-chrome-canary
   iterm2
   kap
   lastpass
   p4merge
-  sip
   skitch
   skyfonts
   skype

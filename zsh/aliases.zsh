@@ -28,6 +28,7 @@ alias la='ls -a'
 alias ll='ls -l'
 alias lal='ls -al'
 
+alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
 alias firefox="/Applications/Firefox.app/Contents/MacOS/firefox"
 alias ci="code-insiders"
 

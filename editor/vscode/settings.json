@@ -1,5 +1,16 @@
 {
   "atomKeymap.promptV3Features": true,
+  "beautify.config": {
+    "indent_size": 2,
+    "wrap_line_length": 0,
+    "html": {
+      "indent_size": 2,
+      "wrap_line_length": 0
+    },
+    "css": {
+      "indent_size": 2
+    }
+  },
   "colorize.activate_variables_support_beta": true,
   "editor.fontFamily": "'SourceCodePro Nerd Font Mono', Menlo, Monaco, 'Courier New', monospace",
   "editor.fontSize": 14,
@@ -7,6 +18,7 @@
   "editor.multiCursorModifier": "ctrlCmd",
   "editor.renderWhitespace": "all",
   "editor.wordWrap": "on",
+  "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "files.associations": {},
   "files.exclude": {
@@ -17,8 +29,7 @@
     "**/CVS": true
   },
   "gitlens.codeLens.scopes": [
-    "blocks",
-    "containers"
+    "document"
   ],
   "gitlens.keymap": "alternate",
   "liveServer.settings.ChromeDebuggingAttachment": true,
@@ -32,8 +43,18 @@
   "terminal.integrated.fontFamily": "SourceCodePro Nerd Font Mono",
   "terminal.integrated.fontSize": 15,
   "vsicons.projectDetection.autoReload": true,
-  "window.zoomLevel": -1,
+  "window.zoomLevel": 0,
   "workbench.colorTheme": "JetJet",
   "workbench.iconTheme": "vscode-icons",
-  "explorer.confirmDelete": false
+  "gitlens.advanced.messages": {
+    "suppressCommitHasNoPreviousCommitWarning": false,
+    "suppressCommitNotFoundWarning": false,
+    "suppressFileNotUnderSourceControlWarning": false,
+    "suppressGitVersionWarning": false,
+    "suppressLineUncommittedWarning": false,
+    "suppressNoRepositoryWarning": false,
+    "suppressResultsExplorerNotice": false,
+    "suppressShowKeyBindingsNotice": true
+  },
+  "material-icon-theme.showWelcomeMessage": false
 }
