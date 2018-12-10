@@ -11,7 +11,28 @@
 	// 		"$2"
 	// 	],
 	// 	"description": "Log output to console"
-	// }
+  // }
+	"constant": {
+    "prefix": "const",
+    "body": "export const ${1:CONSTANT} = '${1:CONSTANT}';"
+  },
+
+  "function block": {
+    "prefix": "fun",
+    "body": "($1) => {\n\t$2\n}"
+  },
+
+  "function return block": {
+    "prefix": "funr",
+    "body": "($1) => (\n\t$2\n)",
+    "description": "Function with immediate return"
+  },
+
+  "function return object": {
+    "prefix": "funro",
+    "body": "($1) => ({\n\t$2\n})",
+    "description": "Function returns object"
+  },
 
   "todo": {
     "prefix": "todo",

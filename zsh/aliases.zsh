@@ -24,9 +24,9 @@ alias grep='() { $(whence -p grep) --color=auto $@ }'
 alias egrep='() { $(whence -p egrep) --color=auto $@ }'
 
 # Directory management
-alias la='ls -a'
-alias ll='ls -l'
-alias lal='ls -al'
+alias lsa='ls -a'
+alias lsl='ls -l'
+alias lsal='ls -al'
 
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
 alias firefox="/Applications/Firefox.app/Contents/MacOS/firefox"
@@ -35,5 +35,4 @@ alias ci="code-insiders"
 alias hosts="ci"
 alias config="ci $(dirname ${0:a:h})"
 alias dotfiles="cd $(dirname ${0:a:h}) && config"
-alias reload="source ~/.zshrc"
-
+alias reload="reset && exec zsh"

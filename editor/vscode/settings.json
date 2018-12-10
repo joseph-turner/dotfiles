@@ -12,7 +12,7 @@
     }
   },
   "colorize.activate_variables_support_beta": true,
-  "editor.fontFamily": "'SourceCodePro Nerd Font Mono', Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontFamily": "'SauceCodePro Nerd Font', monospace",
   "editor.fontSize": 14,
   "editor.fontWeight": "300",
   "editor.multiCursorModifier": "ctrlCmd",
@@ -20,7 +20,9 @@
   "editor.wordWrap": "on",
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
-  "files.associations": {},
+  "files.associations": {
+    "*.js": "javascriptreact"
+  },
   "files.exclude": {
     "**/.DS_Store": true,
     "**/.git": false,
@@ -40,12 +42,11 @@
   "scss.lint.idSelector": "ignore",
   "scss.lint.zeroUnits": "warning",
   "scss.showErrors": true,
-  "terminal.integrated.fontFamily": "SourceCodePro Nerd Font Mono",
+  "terminal.integrated.fontFamily": "'SauceCodePro Nerd Font', monospace",
   "terminal.integrated.fontSize": 15,
   "vsicons.projectDetection.autoReload": true,
   "window.zoomLevel": 0,
-  "workbench.colorTheme": "JetJet",
-  "workbench.iconTheme": "vscode-icons",
+  "workbench.iconTheme": "material-icon-theme",
   "gitlens.advanced.messages": {
     "suppressCommitHasNoPreviousCommitWarning": false,
     "suppressCommitNotFoundWarning": false,
@@ -56,5 +57,24 @@
     "suppressResultsExplorerNotice": false,
     "suppressShowKeyBindingsNotice": true
   },
-  "material-icon-theme.showWelcomeMessage": false
+  "material-icon-theme.showWelcomeMessage": false,
+  "[html]": {
+
+    },
+    "editor.tabSize": 2,
+    "search.exclude": {
+      "**/.git": true,
+      "yarn.lock": true
+    },
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "eslint.packageManager": "yarn",
+    "files.trimTrailingWhitespace": true,
+    "emmet.includeLanguages": {
+      "javascript": "javascriptreact"
+    },
+    "editor.fontLigatures": true,
+    "workbench.colorTheme": "Code Blue",
+    "editor.suggestSelection": "recentlyUsedByPrefix"
 }

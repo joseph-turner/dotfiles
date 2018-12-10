@@ -11,7 +11,7 @@ RSA_FILE="$HOME/.ssh/$F"
 
 if [ ! -f "$RSA_FILE" ]; then
 
-  echo "Enter your username: [joseph.turner@accenture.com]"
+  echo "Enter your username: [iamjoeturner@gmail.com]"
   read U
 
   echo "Enter ssh user: [git]"
@@ -20,7 +20,7 @@ if [ ! -f "$RSA_FILE" ]; then
   echo "Enter the Hostname"
   read RSA_HOST
 
-  U="${U:=joseph.turner@accenture.com}"
+  U="${U:=iamjoeturner@gmail.com}"
   SSH_U="${SSH_U:=git}"
 
   ssh-keygen -t rsa -b 4096 -f "$RSA_FILE" -C "$U"

@@ -10,7 +10,7 @@ casks=(
 
   # Installers and apps
   adobe-creative-cloud
-  bettertouchtool
+  # bettertouchtool
   betterzip # Note: The BetterZipQL plugin was integrated with the BetterZip app.
   docker
   dropbox
@@ -23,14 +23,15 @@ casks=(
   lastpass
   p4merge
   skitch
-  skyfonts
-  skype
-  slack
+  # skyfonts
+  # skype
+  # slack
   spotify
   suspicious-package # Preview the contents of a standard Apple installer package
   ubersicht
-  virtualbox
+  # virtualbox
   visual-studio-code-insiders
+  zeplin
 
   # Quick Look Plugins (https://github.com/sindresorhus/quick-look-plugins)
   qlcolorcode # Preview source code files with syntax highlighting

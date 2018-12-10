@@ -1,0 +1,8 @@
+{
+  "name": "my-dotfiles",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/joseph-turner/dotfiles.git",
+  "author": "Joseph Turner <iamjoeturner@gmail.com>",
+  "license": "MIT"
+}

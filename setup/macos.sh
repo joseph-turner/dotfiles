@@ -108,8 +108,8 @@ defaults write NSGlobalDomain AppleMetricUnits -bool true
 ###############################################################################
 
 # Require password immediately after sleep or screen saver begins
-# defaults write com.apple.screensaver askForPassword -int 1
-# defaults write com.apple.screensaver askForPasswordDelay -int 5
+defaults write com.apple.screensaver askForPassword -bool true
+defaults write com.apple.screensaver askForPasswordDelay -int 10
 
 # Save screenshots to the desktop
 mkdir -p ${HOME}/Pictures/screenshots
@@ -148,6 +148,9 @@ defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 
 # Disable the warning when changing a file extension
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+
+# Hide icons on desktop
+defaults write com.apple.finder CreateDesktop -bool false
 
 # Enable spring loading for directories
 defaults write NSGlobalDomain com.apple.springing.enabled -bool true

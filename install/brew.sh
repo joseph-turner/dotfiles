@@ -29,7 +29,6 @@ brew upgrade
 
 formulae=(
   git
-  git-extras
   git-flow
   htop
   nvm
@@ -37,6 +36,7 @@ formulae=(
   tmux
   trash
   tree
+  yarn
 )
 
 formulae_to_install=()
