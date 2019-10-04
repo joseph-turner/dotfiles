@@ -1,36 +1,87 @@
 [alias]
-  amend     = commit -a --amend --reuse-message=HEAD
+  # Branch
+  br  = branch
+  bra = branch -ra
+  # checkout new branch based on updated master
+  cmb = "!f() { git checkout master && git up; git checkout -b $1; }; f"
+  co  = checkout
+  cob = checkout -b
+  # checkout last branch
+  col  = "!f() { if [[ $# -eq 0 ]] || [[ $1 =~ \"^[0-9]+$\" ]]; then git checkout `git rev-parse --abbrev-ref @{-${1-1}}`; else git checkout $@; fi; }; f"
+  com = checkout master
+  # TODO: add ability to change other branch
+  rename = "!f() { git branch -m $1; }; f"
+
+  # Commits/Pulls/Pushes
+  amend     = commit -a --amend --reuse-message = HEAD
   cm        = !git add -A && git commit -m
-  co        = checkout
-  cob       = checkout -b
-  df        = diff -w
-  ds        = diff --staged
-  ec        = config --global -e
-  ecl       = config --local -e
-  grep      = grep -Ii
-  lg        = log --graph --decorate --abbrev-commit --pretty=fuller --date=relative --name-status --branches
-  ls        = ls-files
-  mine      = !git lg --author=$(git config user.name) --branches
-  mnc       = merge --no-commit --no-ff
-  mt        = mergetool
-  rh        = reset --hard
-  rs        = reset --soft
-  pp        = !git pull --prune --all && git push --all
-  pu        = push -u origin HEAD
-  publish   = !git push -u origin $(git rev-parse --abbrev-ref HEAD)
-  slg       = log --graph --pretty=format:'%C(yellow)%h%Creset -%C(auto)%d%Creset %s %C(green)(%cr) %C(bold blue)<%an>%Creset'
-  st        = status -sb --ignore-submodules
-  undo      = reset HEAD~1 --mixed # resets the previous commit, but keeps all the changes from that commit
-  unpublish = !git push origin :$(git rev-parse --abbrev-ref HEAD)
-  up        = !git pull --all --prune #$@ && git submodule update --init --recursive
+  cmp       = "!f() { git cm \"$1\" && echo && echo 'Commit successfull!' && echo 'Pushing changes...' && echo && git pu ;}; f"
+  cp        = cherry-pick
+  pp        = !git up && git pu
+  publish = !git push -u origin $(git rev-parse --abbrev-ref HEAD) # pushes to new remote branch
+  unpublish = !git push origin :$(git rev-parse --abbrev-ref HEAD) # deletes current branch's remote
+
+  # Config
+  ec  = config --global -e
+  ecl = config --local -e
+
+  # Diff/Log
+  df      = diff -w
+  dlc     = diff --cached HEAD^
+  ds      = diff --staged
+  f       = "!git ls-files | grep -i" # Grep on filename
+  fl      = log -u
+  grep    = grep -Ii
+  lasttag = describe --tags --abbrev=0
+  lt      = describe --tags --abbrev=0
+  lg      = log --graph --decorate --abbrev-commit --pretty=fuller --date=relative --name-status --branches
+  ls      = ls-files
+  mine    = !git lg --author=$(git config user.name) --branches
+  slg     = log --graph --pretty=format:'%C(yellow)%h%Creset -%C(auto)%d%Creset %s %C(green)(%cr) %C(bold blue)<%an>%Creset'
+
+  # Merges
+  abort   = "!$(git merge --abort &>/dev/null) || $(git rebase --abort &>/dev/null) || echo \"Not merging or rebasing\""
+  mc      = merge --continue
+  mm      = merge-master
+  mnc     = merge --no-commit --no-ff
+  mt      = mergetool
+  ours    = "!f() { git co --ours $@ && git add $@; }; f"
+  theirs  = "!f() { git co --theirs $@ && git add $@; }; f"
+
+  # Resets
+  bounce  = "!f() { git clix && bounce \"$1\"; }; f"
+  clx     = clean -fdx
+  clix    = clean -fdix
+  rh      = reset --hard
+  rs      = reset --soft
+  mundo   = reset HEAD~1 --mixed # resets the previous commit, but keeps all the changes from that commit
+  undo    = "!f() { git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}}; }; f" # undo from here http: //megakemp.com/2016/08/25/git-undo/
+
+  # Stashes
+  sa  = stash apply
+  sb  = stash branch
+  sd  = stash drop
+  sl  = stash list
+  sp  = stash pop
+  ss  = stash save -u
+
+  # Status
+  st  = status -sb --ignore-submodules
 
 [color]
   ui = auto
 
 [color "branch"]
-  current   = yellow reverse
-  local     = yellow
-  remote    = green
+  current = yellow reverse
+  local   = cyan
+  remote  = green
+
+[color "diff"]
+  meta  = yellow
+  frag  = magenta
+  old   = red bold
+  new   = green
+  plain = white
 
 [color "status"]
   added     = yellow
@@ -38,35 +89,43 @@
   untracked = cyan
 
 [core]
-  editor    = code-insiders --wait
+  editor       = code-insiders --wait
   excludesfile = ~/.gitignore
-  fscache   = true
-  ignore    = dirty
+  fscache      = true
+  ignore       = dirty
   preloadindex = true
 
 [credential]
-	helper = osxkeychain
+  helper = osxkeychain
 
 [diff]
+  tool = vscode
   tool = p4mergetool
 
 [difftool "p4mergetool"]
   cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge "$LOCAL" "$REMOTE"
 
+[difftool "vscode"]
+  cmd = code-insiders --wait --diff $LOCAL $REMOTE
+
 [help]
   autocorrect = 1
 
 [merge]
+  tool = vscode
   tool = p4mergetool
 
 [mergetool "p4mergetool"]
-  cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge "$PWD/$BASE" "$PWD/$LOCAL" "$PWD/$REMOTE" "$PWD/$MERGED"
+  cmd           = /Applications/p4merge.app/Contents/Resources/launchp4merge "$PWD/$BASE" "$PWD/$LOCAL" "$PWD/$REMOTE" "$PWD/$MERGED"
   trustExitCode = false
+
+[mergetool "vscode"]
+  cmd = code-insiders --wait $MERGED
 
 [mergetool]
   keepBackup = false
 
 # This is Git's per-user configuration file.
 [user]
-	name = Joseph Turner
-  email = iamjoeturner@gmail.com
+  name  = Joseph Turner
+  email = jturner@overstock.com

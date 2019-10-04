@@ -5,19 +5,20 @@
 export LANG="en_US.UTF-8"
 export LC_ALL="$LANG"
 
-# Path to your oh-my-zsh installation.
-export ZSH=/Users/joseph.turner/.oh-my-zsh
 export NVM_DIR="$HOME/.nvm"
+export NVM_DEFAULT="lts/*"
 
 # PATH
 # Directories to be prepended to $PATH
 # =============================================================================
 
-declare -a dirs_to_prepend
+local -a dirs_to_prepend
 dirs_to_prepend=(
+  "/opt/local/bin"
   "/usr/local/sbin"
   "/usr/local"
   "$HOME/bin"
+  "$HOME/bin/git"
   "$(brew --prefix coreutils)/libexec/gnubin" # Add brew-installed GNU core utilities bin
   "$(brew --prefix)/share/npm/bin" # Add npm-installed package bin
 )
@@ -49,7 +50,6 @@ export GIT_FRIENDLY_NO_COMPOSER=true
 
 # List of files that need to be sourced outside of the dotfiles dir
 local sources=(
-  "$ZSH/oh-my-zsh.sh"
   "$(brew --prefix nvm)/nvm.sh"
   "~/.zshrc.local"
   "~/.iterm2_shell_integration.zsh"
@@ -67,19 +67,75 @@ fi
 # If the file exists, source it
 for i in ${sources[@]}; do
   if [[ -f $i ]]; then
-    # echo "sourcing $i"
+    # echo "Loading $i"
     source $i
   else
     # echo "$i not found"
   fi
 done
 
+# Then, source plugins and add commands to $PATH
+zplug load
+
+# Adds a hook to look for nvmrc on folder change
+autoload -U add-zsh-hook
+# Load the proper version of node
+load-nvmrc-lts() {
+  # Only run in directories that need Node
+  if [[ -f "./package.json" ]]; then
+    # Set default alias to LTS
+    nvm alias default ${NVM_DEFAULT:-"lts/*"} &> /dev/null
+    # Get current version
+    local node_version="$(nvm version)"
+    # Get default version
+    local lts_version="$(nvm version-remote --lts)"
+    # Get nvmrc if exists
+    local nvmrc_path="$(nvm_find_nvmrc)"
+
+    # If there is an nvmrc
+    if [ -n "$nvmrc_path" ]; then
+      # Get the latest version specified in nvmrc
+      local nvmrc_version=$(nvm version-remote "$(cat "${nvmrc_path}")")
+
+      # If the current version is not the specified version
+      if [ "$nvmrc_version" != "$node_version" ]; then
+
+        # If the specified version is installed
+        if $(nvm version "${nvmrc_version}" &> /dev/null); then
+          # Use it
+          nvm use
+
+        # Otherwise
+        else
+          # Install it
+          nvm install
+        fi
+      fi
+
+    # If there is no nvmrc and the current version is not the latest lts version
+    elif [ "$node_version" != "$lts_version" ]; then
+      # and if latest lts version is installed
+      if $(nvm version "$lts_version" &> /dev/null); then
+        # use it
+        nvm use --lts
+
+      # Otherwise
+      else
+        # install the current lts version and set the default alias
+        nvm install --lts
+      fi
+    fi
+  fi
+}
+add-zsh-hook chpwd load-nvmrc-lts
+load-nvmrc-lts
 
 # =============================================================================
 #                                   Options
 # =============================================================================
 
 # improved less option
+export LESS="-FiJMRWX -x4 -z-4 "
 export LESS="--tabs=4 --no-init --LONG-PROMPT --ignore-case --quit-if-one-screen --RAW-CONTROL-CHARS"
 
 # Watching other users
@@ -132,26 +188,5 @@ zstyle ":completion:*" matcher-list \
 
 zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}
 
-# =============================================================================
-#                                   Startup
-# =============================================================================
-
-# Install plugins if there are plugins that have not been installed
-if ! zplug check; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
-
-# Then, source plugins and add commands to $PATH
-zplug load
-
-# History
-if zplug check "zsh-users/zsh-history-substring-search"; then
-	zmodload zsh/terminfo
-	bindkey "$terminfo[kcuu1]" history-substring-search-up
-	bindkey "$terminfo[kcud1]" history-substring-search-down
-	bindkey "^[[1;5A" history-substring-search-up
-	bindkey "^[[1;5B" history-substring-search-down
-fi
+# TODO: add custom completions leveraging _git
+compdef _git g=git

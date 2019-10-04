@@ -1,0 +1,32 @@
+#!/usr/local/bin/zsh
+
+autoload colors; colors
+
+local branch=$(git for-each-ref --format='%(upstream:short)' "$(git symbolic-ref -q HEAD)")
+local pkg=false
+local nvm=false
+echo "Merging from $branch"
+echo
+
+git fetch --prune origin
+
+# check for yarn.lock and set pkg
+# check for .nvmrc and set nvm
+[[ $(git diff --name-only "$branch" | grep "yarn.lock") ]] && pkg=true
+[[ $(git diff --name-only "$branch" | grep ".nvmrc") ]] && nvm=true
+
+git merge "$branch"
+echo
+
+if $pkg; then
+    echo "yarn.lock has been updated"
+    echo
+    bounce
+fi
+
+if $nvm; then
+  echo ".nvmrc has changed"
+  echo "Running $fg[blue]nvm use$reset_color"
+  echo
+  nvm use
+fi

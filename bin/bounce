@@ -1,0 +1,29 @@
+#!/usr/local/bin/zsh
+
+# Removes node_modules folder and reinstalls it
+
+# set yarn as default package manager
+local pkg_mgr="${1:-yarn}"
+
+# Return early if there's no package.json
+[[ ! -a "./package.json" ]] && echo "No package.json present" && return 1
+
+# Attempt to cut time by using `yarn check` if available
+if [[ $(echo "$pkg_mgr") == "yarn" ]] && echo "Checking node modules..." && yarn check --verify-tree &> /dev/null; then
+    echo "Packages are up to date. Pull to get new changes or keep on keepin' on!"
+else
+    # Make sure there's a node_modules folder to delete
+    if [[ -d "./node_modules" ]]; then
+        echo "removing ./node_modules"
+        rm -rf "./node_modules"
+        echo
+        echo "Reinstalling modules..."
+        echo
+        $pkg_mgr
+    else
+        echo
+        echo "Reinstalling modules..."
+        echo
+        $pkg_mgr
+    fi
+fi

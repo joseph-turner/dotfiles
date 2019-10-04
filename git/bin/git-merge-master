@@ -1,0 +1,39 @@
+#!/usr/local/bin/zsh
+
+# Accepts and argument of a branch name and it will merge the latest changes of that branch
+# Default branch is master
+local stashed node_pkg nvm_up
+local default_branch="${1:-master}"
+local working_branch=$(git branch | grep \* | cut -d ' ' -f2)
+
+if [[ "$working_branch" != "$default_branch" ]]; then
+    # Check if the "default_branch" exists
+    if $(git show-ref --verify --quiet "refs/heads/$default_branch"); then
+        # If dirty, stash
+        [[ ! -z $(git diff --stat) ]] && echo "Uncommitted changes found." && echo "Stashing..." && git stash && stashed=true
+        echo
+
+        # Checkout default_branch and pull
+        git checkout "$default_branch" && git up
+        echo
+
+        # Checkout working branch
+        git checkout "$working_branch"
+        echo
+
+        # If `yarn.lock` has changed, run `bounce`
+        [[ $(git diff --name-only master | grep "yarn.lock") ]] && echo "Changes detected in " && node_pkg=true
+        [[ $(git diff --name-only master | grep ".nvmrc") ]] && nvm_up=true
+        git merge --no-edit $default_branch
+        [[ $node_pkg ]] && bounce
+        [[ $nvm_up ]] && nvm use
+
+        # If shashed, pop out changes
+        [[ $stashed ]] && echo && git stash pop || :
+    else
+        echo "$default_branch is not a branch..."
+    fi
+else
+    echo "Already on $default_branch. Executing pull..."
+    git up
+fi

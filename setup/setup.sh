@@ -182,7 +182,6 @@ symlink_files() {
     'git/.gitignore'
 
     'zsh/.zshrc'
-
   )
 
   local i=''
@@ -274,7 +273,7 @@ symlink_editor_settings() {
   fi
 }
 
-install_zsh () {
+install_zsh() {
   # Test to see if zshell is installed.  If it is:
   if [ -f /bin/zsh -o -f /usr/bin/zsh ]; then
     # Install Oh My Zsh if it isn't already present
@@ -297,6 +296,12 @@ install_zsh () {
   fi
 }
 
+install_wakatime() {
+  if [ ! "$(which wakatime)" ]; then
+    pip3 install wakatime
+  fi
+}
+
 # Symlink files and binaries
 symlink_files
 symlink_binaries
@@ -308,6 +313,8 @@ symlink_binaries
 
 symlink_editor_settings
 install_zsh
+
+install_wakatime
 
 cd "$CURRENT_DIR"
 unset CURRENT_DIR
