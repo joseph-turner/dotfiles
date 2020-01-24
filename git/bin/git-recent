@@ -1,0 +1,67 @@
+#!/usr/local/bin/zsh
+
+autoload colors; colors
+
+usage() {
+  echo "$fg[blue]usage: (g|git) recent [-n lines] [-l] [-e]$reset_color"
+}
+
+while getopts "hn:ler" opt; do
+  case $opt in
+    h) # help
+      usage
+      exit 1
+      ;;
+    n) # number of results
+      NUM=$OPTARG
+      ;;
+    l) # list mode (non-interactive)
+      INTERACTIVE=0
+      ;;
+    e) # validate existence
+      CHECK_EXISTENCE=1
+      ;;
+    \*)
+      echo "Nope"
+      exit 1
+      ;;
+    \?)
+      usage
+      exit 1
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
+NUM=${NUM-10} # default to 10 lines
+INTERACTIVE=${INTERACTIVE-1} # default to interactive
+CHECK_EXISTENCE=${CHECK_EXISTENCE-0} # default to *not* checking existence (faster)
+COLUMNS=80
+
+BRANCHES=(
+  $(git reflog |
+    egrep -io "moving from ([^[:space:]]+)" |
+    awk '{ print $3 }' | # extract 3rd column
+    awk ' !x[$0]++' | # Removes duplicates. See http://stackoverflow.com/questions/11532157
+    egrep -v '^[a-f0-9]{40}$' | # remove hash results
+    while read line; do # verify existence
+      ([[ $CHECK_EXISTENCE = '0' ]] || git rev-parse --verify "$line" &>/dev/null) && echo "$line"
+    done |
+    head -n "$NUM"
+  )
+)
+
+[ $# -eq 1 ] && git checkout "${BRANCHES[$1]}" && exit 0
+
+if [[ $INTERACTIVE = '1' ]]; then
+  PS3=$'\nChoose a branch: '
+
+  select d in "${BRANCHES[@]}"; do
+    test -n "$d" && break;
+    echo ">>> Invalid Selection";
+  done
+
+  git checkout "$d"
+else
+  printf '%s\n' "${BRANCHES[@]}"
+fi

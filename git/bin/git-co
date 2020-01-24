@@ -1,0 +1,48 @@
+#!/usr/local/bin/zsh
+
+usage() {
+  echo "usage: g[it] co [<options>] <branch>"
+  echo "   or: g[it] co [<options>] -- <file>..."
+  echo
+  echo "    -B <branch>       create and checkout a new branch based on latest master branch"
+  echo "    -b <branch>       create and checkout a new branch"
+  echo "    -f <file-name>    "
+  echo "    -m                checkout master"
+  echo "    -r [<number>]     checkout recent branch"
+}
+
+[[ $# == "2" ]] && [[ $1 == "--" ]] && git checkout $@
+
+while getopts ":B:b:lmr:" opt; do
+  case ${opt} in
+    B) # Checkout new branch based on latest master
+      git checkout master && git up && git checkout -b $OPTARG
+      ;;
+    b) # Checkout new branch based on currently checked out branch
+      git checkout -b $OPTARG
+      ;;
+    f)
+      git checkout -- $OPTARG
+      ;;
+    l)
+      git recent -l
+      ;;
+    m) # Checkout master branch
+      git checkout master
+      ;;
+    r) # Checkout recent branch
+      git recent $OPTARG
+      ;;
+    \?)
+      usage
+      exit 1
+      ;;
+    : )
+      [[ $OPTARG == 'r' ]] && git recent && exit 1
+      echo "Invalid option: -$OPTARG requires an argument" 1>&2
+      exit 1
+      ;;
+
+  esac
+done
+shift $((OPTIND -1))

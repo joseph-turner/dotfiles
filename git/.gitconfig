@@ -3,22 +3,21 @@
   br  = branch
   bra = branch -ra
   # checkout new branch based on updated master
-  cmb = "!f() { git checkout master && git up; git checkout -b $1; }; f"
-  co  = checkout
-  cob = checkout -b
-  # checkout last branch
-  col  = "!f() { if [[ $# -eq 0 ]] || [[ $1 =~ \"^[0-9]+$\" ]]; then git checkout `git rev-parse --abbrev-ref @{-${1-1}}`; else git checkout $@; fi; }; f"
-  com = checkout master
-  # TODO: add ability to change other branch
-  rename = "!f() { git branch -m $1; }; f"
+  cmb = co -B
+  # checkout new branch
+  cob = co -b
+  com = co -m
+  cor = co -r
+  col = co -l
 
   # Commits/Pulls/Pushes
+  a         = add -A
   amend     = commit -a --amend --reuse-message = HEAD
   cm        = !git add -A && git commit -m
   cmp       = "!f() { git cm \"$1\" && echo && echo 'Commit successfull!' && echo 'Pushing changes...' && echo && git pu ;}; f"
   cp        = cherry-pick
   pp        = !git up && git pu
-  publish = !git push -u origin $(git rev-parse --abbrev-ref HEAD) # pushes to new remote branch
+  publish   = !git push -u origin $(git rev-parse --abbrev-ref HEAD) # pushes to new remote branch
   unpublish = !git push origin :$(git rev-parse --abbrev-ref HEAD) # deletes current branch's remote
 
   # Config

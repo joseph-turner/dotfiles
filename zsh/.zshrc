@@ -189,4 +189,4 @@ zstyle ":completion:*" matcher-list \
 zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}
 
 # TODO: add custom completions leveraging _git
-compdef _git g=git
+compdef _git2 g=git

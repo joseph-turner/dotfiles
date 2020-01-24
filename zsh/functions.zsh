@@ -85,11 +85,14 @@ function reload() {
   }
 
   local -a files
-  while getopts "afhkptz" opt; do
+  while getopts "acfhkptz" opt; do
       # set arg to file path
       case $opt in
           a)
               files+="aliases"
+              ;;
+          c)
+              files+="completions"
               ;;
           f)
               files+="functions"

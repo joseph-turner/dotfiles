@@ -1,29 +1,68 @@
 #!/usr/local/bin/zsh
 
+autoload colors; colors
+
 # Removes node_modules folder and reinstalls it
+# Return early if there's no package.json
+[[ ! -a "./package.json" ]] && echo "$fg[red]No package.json present$reset_color" && return 1
 
 # set yarn as default package manager
 local pkg_mgr="${1:-yarn}"
 
-# Return early if there's no package.json
-[[ ! -a "./package.json" ]] && echo "No package.json present" && return 1
+usage() {
+  echo "usage: bounce [<options>]"
+  echo
+  echo "    -f            force reinstall node modules"
+  echo "    -h            display this message"
+  echo
+}
+
+inst() {
+  echo
+  echo "Installing modules..."
+  echo
+  $pkg_mgr
+}
+
+reinst() {
+  echo "removing ./node_modules"
+  rm -rf "./node_modules"
+  echo
+  echo "Reinstalling modules..."
+  echo
+  $pkg_mgr
+}
+
+while getopts "fh" opt; do
+  case $opt in
+    f)
+      reinst
+      ;;
+    h)
+      usage
+      return 0
+      ;;
+    \?)
+      echo "$fg[yellow]Invalid option: -$OPTARG $reset_color"
+      usage
+      return 1
+      ;;
+    :)
+      echo "$fg[yellow]Option -$OPTARG requires an argument$reset_color"
+      usage
+      return 1
+      ;;
+  esac
+done
+shift "$((OPTIND-1))"
+
+[[ ! -d "./node_modules" ]] && inst && return 0
 
 # Attempt to cut time by using `yarn check` if available
-if [[ $(echo "$pkg_mgr") == "yarn" ]] && echo "Checking node modules..." && yarn check --verify-tree &> /dev/null; then
-    echo "Packages are up to date. Pull to get new changes or keep on keepin' on!"
+if [[ $(echo "$pkg_mgr") == "yarn" ]] && echo "$fg[cyan]Checking node modules...$reset_color" && yarn check --verify-tree &> /dev/null; then
+    echo "$fg[green]Packages are up to date. Pull to get new changes or keep on keepin' on!$reset_color"
 else
-    # Make sure there's a node_modules folder to delete
-    if [[ -d "./node_modules" ]]; then
-        echo "removing ./node_modules"
-        rm -rf "./node_modules"
-        echo
-        echo "Reinstalling modules..."
-        echo
-        $pkg_mgr
-    else
-        echo
-        echo "Reinstalling modules..."
-        echo
-        $pkg_mgr
-    fi
+    echo
+    echo "$fg[cyan]Changes in node modules detected...$reset_color"
+    reinst
 fi
