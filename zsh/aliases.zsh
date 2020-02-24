@@ -35,12 +35,15 @@ alias ci.="c."
 alias config="code $(dirname ${0:a:h})"
 
 alias yd="yarn dev"
+alias yf="yarn flow"
+alias ytf="yt && yf"
 alias yst="nvm use && yarn start"
 # yarn charles => yarn chuck => yuck
 alias yuck="yarn charles"
 alias gyst="gmm && yst"
 
 # My most common git commands
+alias g="git"
 alias gcm="g cm"
 alias gcmp="g cmp"
 alias gco="g co"

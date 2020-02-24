@@ -78,7 +78,6 @@
     "editor.cursorBlinking": "phase",
     "editor.cursorSmoothCaretAnimation": true,
     "editor.cursorStyle": "line-thin",
-    "editor.formatOnPaste": true,
     "search.usePCRE2": true,
     "editor.fontSize": 14,
     "javascript.suggest.enabled": false,
@@ -86,7 +85,8 @@
     "oneDarkPro.bold": true,
     "oneDarkPro.vivid": true,
     "oneDarkPro.italic": true,
-    "workbench.colorTheme": "Noctis Azureus",
+    "workbench.colorTheme": "SynthWave '84",
     "terminal.external.osxExec": "iTerm.app",
-    "terminal.integrated.fontFamily": "\"Dank Mono\", \"FuraCode Nerd Font\""
+    "terminal.integrated.fontFamily": "\"Dank Mono\", \"FuraCode Nerd Font\"",
+    "diffEditor.ignoreTrimWhitespace": false
 }

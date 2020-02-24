@@ -1,10 +1,44 @@
 #!/usr/local/bin/zsh
 
+while getopts "r" opt; do
+  case $opt in
+    r)
+      rebase=1
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG"
+      return 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument"
+      return 1
+      ;;
+  esac
+done
+shift "$((OPTIND-1))"
+
 # Accepts and argument of a branch name and it will merge the latest changes of that branch
 # Default branch is master
-local stashed node_pkg nvm_up
+local stashed
+local dep=false
+local nvm=false
+local rebase=${rebase-0} # Default to merge instead of rebase
 local default_branch="${1:-master}"
 local working_branch=$(git branch | grep \* | cut -d ' ' -f2)
+
+function update_dep() {
+  echo
+  echo "Changes detected in yarn.lock"
+  echo
+  bounce
+}
+
+function update_node() {
+  echo
+  echo "Change detected in .nvmrc"
+  echo
+  nvm use
+}
 
 if [[ "$working_branch" != "$default_branch" ]]; then
     # Check if the "default_branch" exists
@@ -14,7 +48,7 @@ if [[ "$working_branch" != "$default_branch" ]]; then
         echo
 
         # Checkout default_branch and pull
-        git checkout "$default_branch" && git up
+        git checkout "$default_branch" && git up -C
         echo
 
         # Checkout working branch
@@ -22,11 +56,12 @@ if [[ "$working_branch" != "$default_branch" ]]; then
         echo
 
         # If `yarn.lock` has changed, run `bounce`
-        [[ $(git diff --name-only master | grep "yarn.lock") ]] && echo "Changes detected in " && node_pkg=true
-        [[ $(git diff --name-only master | grep ".nvmrc") ]] && nvm_up=true
-        git merge --no-edit $default_branch
-        [[ $node_pkg ]] && bounce
-        [[ $nvm_up ]] && nvm use
+        local gdiff=`git diff --name-only "$default_branch"`
+        [[ $(grep "yarn.lock" <<< $gdiff) ]] && dep=true
+        [[ $(grep ".nvmrc" <<< $gdiff) ]] && nvm=true
+        [[ $rebase == '0' ]] && git merge --no-edit $default_branch || git rebase -i $default_branch
+        [[ $dep = true ]] && update_dep
+        [[ $nvm = true ]] && update_node
 
         # If shashed, pop out changes
         [[ $stashed ]] && echo && git stash pop || :

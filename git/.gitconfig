@@ -8,11 +8,13 @@
   cob = co -b
   com = co -m
   cor = co -r
-  col = co -l
+  col = co 1
+  corl = co -l
 
   # Commits/Pulls/Pushes
   a         = add -A
   amend     = commit -a --amend --reuse-message = HEAD
+  cl        = "!f() { git clone $@; [[ -n $2 ]] && cd $2 || cd $(basename $_ .git); }; f" # changes directory after cloning repo
   cm        = !git add -A && git commit -m
   cmp       = "!f() { git cm \"$1\" && echo && echo 'Commit successfull!' && echo 'Pushing changes...' && echo && git pu ;}; f"
   cp        = cherry-pick
@@ -42,8 +44,10 @@
   abort   = "!$(git merge --abort &>/dev/null) || $(git rebase --abort &>/dev/null) || echo \"Not merging or rebasing\""
   mc      = merge --continue
   mm      = merge-master
+  mmr     = merge-master -r
   mnc     = merge --no-commit --no-ff
   mt      = mergetool
+  rc      = !git rebase --continue || git mergetool
   ours    = "!f() { git co --ours $@ && git add $@; }; f"
   theirs  = "!f() { git co --theirs $@ && git add $@; }; f"
 

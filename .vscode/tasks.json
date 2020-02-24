@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Script",
+      "type": "shell",
+      "command": "osascript",
+      "args": [
+        "get-song-data.applescript"
+      ]
+    },
+    {
+      "label": "Compile Script",
+      "type": "shell",
+      "command": "osacompile",
+      "args": [
+        "-o",
+        "get-song-data.scpt",
+        "get-song-data.applescript"
+      ],
+      "group": "build"
+    },
+    {
+      "label": "Compile Script Bundle",
+      "type": "shell",
+      "command": "osacompile",
+      "args": [
+        "-o",
+        "get-song-data.scptd",
+        "get-song-data.applescript"
+      ],
+      "group": "none"
+    },
+    {
+      "label": "Compile Application",
+      "type": "shell",
+      "command": "osacompile",
+      "args": [
+        "-o",
+        "get-song-data.app",
+        "get-song-data.applescript"
+      ],
+      "group": "none"
+    }
+  ]
+}

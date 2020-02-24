@@ -37,7 +37,7 @@ function gz() {
 }
 
 function update() {
-  echo "Updated and cleaning up homebrew stuff"
+  echo "Updating and cleaning up homebrew stuff"
   brew update && brew upgrade && brew cleanup
 
   echo "Installing latest LTS version of Node"
@@ -50,17 +50,6 @@ function chrome() {
 
 function ip() {
     ifconfig en0 | grep inet | grep -v inet6 | awk '{print $2}'
-}
-
-# If git clone then don't use git otherwise use git
-# this makes sure that the cd command works
-function g() {
-
-  if [[ $1 =~ (^clone$|^cl$) ]]; then
-    [[ -n $2 ]] && git clone $2 && cd $(basename $_ .git)
-  else
-    git $@
-  fi
 }
 
 function reload() {
