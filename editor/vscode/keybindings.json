@@ -31,5 +31,10 @@
     {
       "key": "ctrl+5",
       "command": "terminalTabs.showTerminal5"
+    },
+    {
+      "key": "shift+tab shift+tab",
+      "command": "editor.emmet.action.expandAbbreviation",
+      "when": "config.emmet.triggerExpansionOnTab && editorTextFocus && !editorReadonly && !editorTabMovesFocus"
     }
   ]

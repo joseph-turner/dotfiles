@@ -1,5 +1,4 @@
 {
-  "atomKeymap.promptV3Features": true,
   "beautify.config": {
     "indent_size": 2,
     "wrap_line_length": 0,
@@ -12,8 +11,7 @@
     }
   },
   "colorize.activate_variables_support_beta": true,
-  "editor.fontFamily": "'SauceCodePro Nerd Font', monospace",
-  "editor.fontSize": 14,
+  "editor.fontFamily": "'FuraCode Nerd Font', monospace",
   "editor.fontWeight": "300",
   "editor.multiCursorModifier": "ctrlCmd",
   "editor.renderWhitespace": "all",
@@ -21,7 +19,10 @@
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "files.associations": {
-    "*.js": "javascriptreact"
+    "*.js": "javascriptreact",
+    ".jenkins": "json",
+    ".browserslistrc": "shellscript",
+    "*.xml": "xml"
   },
   "files.exclude": {
     "**/.DS_Store": true,
@@ -34,17 +35,11 @@
     "document"
   ],
   "gitlens.keymap": "alternate",
-  "liveServer.settings.ChromeDebuggingAttachment": true,
-  "liveServer.settings.CustomBrowser": "chrome",
-  "liveServer.settings.donotShowInfoMsg": true,
-  "liveServer.settings.donotVerifyTags": true,
   "scss.lint.duplicateProperties": "warning",
   "scss.lint.idSelector": "ignore",
   "scss.lint.zeroUnits": "warning",
   "scss.showErrors": true,
-  "terminal.integrated.fontFamily": "'SauceCodePro Nerd Font', monospace",
   "terminal.integrated.fontSize": 15,
-  "vsicons.projectDetection.autoReload": true,
   "window.zoomLevel": 0,
   "workbench.iconTheme": "material-icon-theme",
   "gitlens.advanced.messages": {
@@ -61,7 +56,6 @@
   "[html]": {
 
     },
-    "editor.tabSize": 2,
     "search.exclude": {
       "**/.git": true,
       "yarn.lock": true
@@ -75,6 +69,28 @@
       "javascript": "javascriptreact"
     },
     "editor.fontLigatures": true,
-    "workbench.colorTheme": "Code Blue",
-    "editor.suggestSelection": "recentlyUsedByPrefix"
+    "editor.suggestSelection": "recentlyUsedByPrefix",
+    "breadcrumbs.enabled": true,
+    "editor.renderControlCharacters": true,
+    "workbench.startupEditor": "welcomePage",
+    "typescript.validate.enable": false,
+    "javascript.validate.enable": false,
+    "editor.cursorBlinking": "phase",
+    "editor.cursorSmoothCaretAnimation": true,
+    "editor.cursorStyle": "line-thin",
+    "editor.fontSize": 14,
+    "javascript.suggest.enabled": false,
+    "material-icon-theme.activeIconPack": "react_redux",
+    "oneDarkPro.bold": true,
+    "oneDarkPro.vivid": true,
+    "oneDarkPro.italic": true,
+    "workbench.colorTheme": "Night Owl",
+    "terminal.external.osxExec": "iTerm.app",
+    "terminal.integrated.fontFamily": "\"Dank Mono\", \"FuraCode Nerd Font\"",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "todo-tree.tree.showScanModeButton": false,
+    "eslint.alwaysShowStatus": true,
+    "stylelint.packageManager": "yarn",
+    "emmet.showExpandedAbbreviation": "inMarkupAndStylesheetFilesOnly",
+    "html-css-class-completion.enableEmmetSupport": true
 }

@@ -28,10 +28,12 @@ brew upgrade
 # which version I'm using.
 
 formulae=(
+  fzy
   git
   git-flow
   htop
   nvm
+  python # for pip
   speedtest_cli
   tmux
   trash

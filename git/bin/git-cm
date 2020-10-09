@@ -1,0 +1,28 @@
+#!/usr/local/bin/zsh
+
+autoload colors; colors
+
+usage() {}
+
+local push
+
+while getopts ":p:" opt; do
+  case $opt in
+    p)
+      push=1
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG"
+      return 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument"
+      return 1
+      ;;
+  esac
+done
+shift "$((OPTIND-1))"
+
+git add -A && git commit -m $1 && echo "$fg[green]\nCommit successful!\n$reset_color" || (echo "$fg[red]Commit failed$reset_color" && push=0)
+
+[[ $push == 1 ]] && echo "Pushing changes..." && git pu && echo "$fg[green]Push successful!$reset_color" || echo "$fg[red]Push Failed! Check Network and try again!$reset_color"

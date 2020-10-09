@@ -1,0 +1,81 @@
+#!/usr/local/bin/zsh
+
+while getopts "pr" opt; do
+  case $opt in
+    p)
+      push=1
+      ;;
+    r)
+      rebase=1
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG"
+      return 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument"
+      return 1
+      ;;
+  esac
+done
+shift "$((OPTIND-1))"
+
+# Accepts and argument of a branch name and it will merge the latest changes of that branch
+# Default branch is master
+local stashed
+# local dep=false
+local nvm=false
+local push=${push-0}
+local rebase=${rebase-0} # Default to merge instead of rebase
+local default_branch="${1:-master}"
+local working_branch=$(git branch | grep \* | cut -d ' ' -f2)
+
+function update_node() {
+  echo
+  echo "Change detected in .nvmrc"
+  echo
+  nvm use
+}
+
+function conditional_stash() {
+  # If dirty, stash
+  [[ ! -z $(git diff --stat) ]] && echo "Uncommitted changes found." && echo "Stashing..." && git stash && stashed=true && echo
+}
+
+# if already on the default branch (master)
+if [[ "$working_branch" == "$default_branch" ]]; then
+    conditional_stash
+    echo "Already on $default_branch. Executing pull..."
+    git up
+    [[ $stashed == "true" ]] && echo && git stash pop
+    exit 0;
+fi
+
+# Check if the "default_branch" exists
+if $(git show-ref --verify --quiet "refs/heads/$default_branch"); then
+    conditional_stash
+
+    # Checkout default_branch and pull
+    git checkout "$default_branch" && git up -C
+    echo
+
+    # Checkout working branch
+    git checkout "$working_branch"
+    echo
+
+    local gdiff=`git diff --name-only "$default_branch"`
+    [[ $(grep ".nvmrc" <<< $gdiff) ]] && nvm=true
+
+    # if rebase flag is on it will rebase
+    [[ $rebase == '0' ]] && git merge --no-edit $default_branch || git rebase $default_branch
+
+    bounce
+
+    [[ $nvm == true ]] && update_node
+    [[ $push == '1' ]] && printf "\nPushing changes\n" && git pu
+
+    # If shashed, pop out changes
+    [[ $stashed == "true" ]] && echo && git stash pop
+else
+    echo "$default_branch is not a branch..."
+fi

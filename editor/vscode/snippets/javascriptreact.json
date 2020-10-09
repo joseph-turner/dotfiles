@@ -12,6 +12,22 @@
 	// 	],
 	// 	"description": "Log output to console"
   // }
+  "action": {
+    "prefix": "action",
+    "body": "export const ${1:actionName} = (${2:data}) => ({\n\t${3:data},\n\ttype: ${4:type});",
+    "description": "Redux action"
+  },
+
+  "action with constant": {
+    "prefix": "actionconst",
+    "body": "export const ${1:CONSTANT} = '${1:CONSTANT}';\nexport const ${2:actionName} = (${3:data}) => ({\n\t${4:data},\n\ttype: ${1:type},\n});"
+  },
+
+  "reselect createSelector": {
+    "prefix": "reselect",
+    "body": "export const ${1:selector} = createSelector(\n\t${2:first selector},\n\t${3:arg} => ${3:arg}$0\n);"
+  },
+
 	"constant": {
     "prefix": "const",
     "body": "export const ${1:CONSTANT} = '${1:CONSTANT}';"

@@ -1,44 +1,30 @@
+#!/usr/local/bin/zsh
+
 # =============================================================================
 #                                   Functions
 # =============================================================================
 
-powerlevel9k_random_color(){
-	local code
-	#for code ({000..255}) echo -n "$%F{$code}"
-	#code=$[${RANDOM}%11+10]    # random between 10-20
-	code=$[${RANDOM}%211+20]    # random between 20-230
-	printf "%03d" $code
-}
-
-zsh_wifi_signal(){
-	local signal=$(nmcli -t device wifi | grep '^*' | awk -F':' '{print $6}')
-    local color="yellow"
-    [[ $signal -gt 75 ]] && color="green"
-    [[ $signal -lt 50 ]] && color="red"
-    echo -n "%F{$color}\uf1eb" # \uf1eb is 
-}
-
 # Create a new directory and enter it
 function mkd() {
-    mkdir -p "$@" && cd "$_";
-}
-
-# List all files, long format, colorized, permissions in octal
-function la(){
- 	ls -l  "$@" | awk '
-    {
-      k=0;
-      for (i=0;i<=8;i++)
-        k+=((substr($1,i+2,1)~/[rwx]/) *2^(8-i));
-      if (k)
-        printf("%0o ",k);
-      printf(" %9s  %3s %2s %5s  %6s  %s %s %s\n", $3, $6, $7, $8, $5, $9,$10, $11);
-    }'
+    mkdir -p "$@" && cd "$@";
 }
 
 # Change working directory to the top-most Finder window location
 function cdf() { # short for `cdfinder`
   cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";
+}
+
+function o() {
+    if [ $# -eq 0 ]; then
+        open .
+    else
+        open "$@"
+    fi
+}
+
+function check_internet() {
+  # ping google
+  [[ ping -c1 8.8.8.8 ]] && return 0 || return 2
 }
 
 # Compare original and gzipped file size
@@ -51,45 +37,88 @@ function gz() {
 }
 
 function update() {
-  echo "Updated and cleaning up homebrew stuff"
-  brew update && brew upgrade && brew prune && brew cleanup;
+  echo "Updating and cleaning up homebrew stuff"
+  brew update && brew upgrade && brew cleanup
 
   echo "Installing latest LTS version of Node"
-  nvm install --lts
+  nvm install --lts && nvm use
 }
 
-function wallpapers() {
+function chrome() {
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" $@ & disown
+}
 
-  # Check flags
-  while getopts ":d:t:" opt; do
-    case ${opt} in
-      # --help | -h)
-      #   helpmenu
-      #   exit
-      #   ;;
-      --directory | --dir | d )
-        # echo "Directory is $OPTARG" >&2
-        local wp_dir=$OPTARG
-        ;;
-      --duration | --dur | t )
-        # Duration of wallpaper cycle (default 5 min)
-        local wp_dur=$OPTARG
-        ;;
-      \? )
-        echo "Invalid option -$OPTARG" 1>&2
-        exit 1
-    esac
+function ip() {
+    ifconfig en0 | grep inet | grep -v inet6 | awk '{print $2}'
+}
+
+function reload() {
+  [[ ! $1 ]] && reset && exec zsh
+
+  usage() {
+      unset files
+
+      echo
+      echo "Reloader - reload sourced files without restarting terminal"
+      echo
+      echo "usage: reload [-afhkptz]"
+      echo
+      echo "  reload      Reloads terminal"
+      echo "    [-a]      Reloads aliases"
+      echo "    [-f]      Reloads functions"
+      echo "    [-h]      Displays this message"
+      echo "    [-k]      Reloads terminal keybindings"
+      echo "    [-p]      Reloads zsh plugins"
+      echo "    [-t]      Reloads oh my zsh theme"
+      echo "    [-z]      Reloads zshrc file"
+  }
+
+  local -a files
+  while getopts "acfhkptz" opt; do
+      # set arg to file path
+      case $opt in
+          a)
+              files+="aliases"
+              ;;
+          c)
+              files+="completions"
+              ;;
+          f)
+              files+="functions"
+              ;;
+          h)
+              usage
+              break;;
+          k)
+              files+="keybindings"
+              ;;
+          p)
+              files+="plugins"
+              ;;
+          t)
+              files+="theme"
+              ;;
+          z)
+              unset files
+              source "$HOME/.zshrc"
+              break;;
+          ?)
+              echo "unknown option: -$opt"
+              usage
+              break;;
+      esac
   done
-  shift $((OPTIND -1))
+  shift $((OPTIND-1))
 
-  echo $wp_dir
-  echo $wp_dur
-
-  # Set some kind of time out for the duration that changes the wallpaper
-  # TODO: download images to temp folder with data.
-
-  # unset wp_dir
-  # unset wp_dur
-
-  # sqlite3 ~/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '$1'" && killall Dock
+  if [[ -n ${files[@]} ]]; then
+      ZSH_SOURCES_DIR=$(dirname $(readlink $HOME/.zshrc))
+      for i in "${files[@]}"; do
+          if [[ -f "$ZSH_SOURCES_DIR/$i.zsh" ]]; then
+              echo "reloading $ZSH_SOURCES_DIR/$i.zsh..."
+              source "$ZSH_SOURCES_DIR/$i.zsh"
+          else
+            echo "Couldn't find file"
+          fi
+      done
+  fi
 }

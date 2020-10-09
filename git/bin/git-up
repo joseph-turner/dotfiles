@@ -1,0 +1,58 @@
+#!/usr/local/bin/zsh
+
+autoload colors; colors
+
+local check=true
+
+while getopts "C" opt; do
+  case $opt in
+    C)
+      check=false
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG"
+      return 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument"
+      return 1
+      ;;
+  esac
+done
+shift "$((OPTIND-1))"
+
+local branch=$(git for-each-ref --format='%(upstream:short)' "$(git symbolic-ref -q HEAD)")
+[[ -z $branch ]] && echo "Current branch (`git rev-parse --abbrev-ref HEAD`) has no upstream" && exit 1
+local pkg=false
+local nvm=false
+echo "Merging from $branch"
+echo
+
+git fetch --prune origin
+
+# check for yarn.lock and set dep
+# check for .nvmrc and set nvm
+local gdiff=`git diff --name-only "$branch"`
+if [[ $check = true ]]; then
+  [[ $(grep "yarn.lock" <<< $gdiff) ]] && dep=true
+  [[ $(grep ".nvmrc" <<< $gdiff) ]] && nvm=true
+fi
+
+git merge "$branch"
+
+function update_dep() {
+  echo
+  echo "Changes detected in yarn.lock"
+  echo
+  bounce
+}
+
+function update_node() {
+  echo
+  echo "Change detected in .nvmrc"
+  echo
+  nvm use
+}
+
+[[ $dep = true ]] && update_dep
+[[ $nvm = true ]] && update_node

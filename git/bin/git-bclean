@@ -1,0 +1,50 @@
+#!/usr/local/bin/zsh
+
+autoload colors; colors
+
+local working_branch=$(git branch --show-current)
+
+# If there's a default branch passed and it's not the currently checked out branch
+if [[ ! $working_branch = ${1-master} ]]; then
+  git co ${1-master} &>/dev/null
+fi
+
+local merged=(`git branch --merged master | grep -v 'master$'`)
+
+
+if [[ -n "$merged" ]]; then
+  echo "$fg[yellow]Removing local branches that have been fully merged into 'master'$reset_color"
+  echo $merged | xargs git branch -d
+else
+  echo "$fg[blue]There no local branches that have been fully merged to 'master'$reset_color"
+fi
+
+echo
+
+local deleted=`git branch -r | awk '{print $1}' | egrep -vf /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}'`
+if [[ -n $deleted ]]; then
+  echo "Here's a list of all local branches that are tracking a $fg[red]deleted remote branch$reset_color:"
+  echo
+  echo $fg[yellow]$deleted$reset_color
+  echo
+
+  local darr=($(echo $deleted))
+  for del in $darr; do
+    local del_cd=$(git log -1 --date=relative --format=%cd -- $del)
+    echo "Last local commit was made $fg[red]$del_cd$reset_color\n"
+    if read -q "?Do you want to remove $fg[yellow]$del$reset_color? (y/N)"; then
+      echo
+      echo "$fg[red]Removing $del$reset_color"
+      git branch -D $del
+      echo
+    else
+      echo "$fg[green]Keeping $del$reset_color"
+      echo
+    fi
+  done
+else
+  echo "$fg[blue]There are no local branches that are tracking a deleted remote branch.$reset_color"
+fi
+
+# Make sure we didn't just delete the branch we came from before attempting to check that branch back out
+git rev-parse $working_branch &>/dev/null && git co $working_branch &>/dev/null

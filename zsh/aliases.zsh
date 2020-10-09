@@ -10,13 +10,11 @@
 export CLICOLOR="YES" # Equivalent to passing -G to ls.
 export LSCOLORS="exgxdHdHcxaHaHhBhDeaec"
 
-[ -d "/opt/local/bin" ] && export PATH="/opt/local/bin:$PATH"
-
 # Prefer GNU version, since it respects dircolors.
 if which gls &>/dev/null; then
-    alias ls='() { $(whence -p gls) -Ctr --file-type --color=auto $@ }'
+  alias ls='() { $(whence -p gls) -Ctr --file-type --color=auto $@ }'
 else
-    alias ls='() { $(whence -p ls) -CFtr $@ }'
+  alias ls='() { $(whence -p ls) -CFtr $@ }'
 fi
 
 # Generic command adaptations.
@@ -28,11 +26,34 @@ alias lsa='ls -a'
 alias lsl='ls -l'
 alias lsal='ls -al'
 
-alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
 alias firefox="/Applications/Firefox.app/Contents/MacOS/firefox"
-alias ci="code-insiders"
+alias code="code-insiders"
+alias c.="code ."
+alias ci="code"
+alias ci.="c."
 
-alias hosts="ci"
-alias config="ci $(dirname ${0:a:h})"
-alias dotfiles="cd $(dirname ${0:a:h}) && config"
-alias reload="reset && exec zsh"
+alias config="code $(dirname ${0:a:h})"
+
+alias yd="yarn dev"
+alias yf="yarn flow"
+alias yl="yarn lint"
+alias ylj="yarn lint:js"
+alias ylc="yarn lint:css"
+alias ytf="yt && yf"
+alias yst="nvm use && yarn && yarn start"
+# yarn charles => yarn chuck => yuck
+alias yuck="yarn charles"
+alias gyst="gmm && yst"
+
+# My most common git commands
+alias g="git"
+alias gcm="g cm"
+alias gcmp="g cmp"
+alias gco="g co"
+alias gcob="g cob"
+alias gmm="g mm"
+alias gmt="g mt"
+alias gpu="g pu"
+alias gst="g st"
+alias gup="g up"
+alias gust="g up && yst"
