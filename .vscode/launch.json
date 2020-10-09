@@ -16,7 +16,8 @@
             "type": "zshdb",
             "request": "launch",
             "name": "Zsh-Debug (simplest configuration)",
-            "program": "${file}"
+            "program": "${file}",
+            "args": ["message"]
         }
     ]
 }
