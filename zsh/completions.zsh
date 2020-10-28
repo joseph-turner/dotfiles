@@ -23,7 +23,7 @@ function _git2() {
 
   case $state in
     cmds)
-      _describe -t commands 'g command' subcmds && ret=0
+      _describe -t commands 'g commands' subcmds && ret=0
       ;;
     args)
       case $words[2] in

@@ -1,0 +1,11 @@
+#!/usr/local/bin/zsh
+
+if [[ ! -z $(git diff --stat) ]]; then
+  echo "Uncommitted changes found."
+  echo "Stashing..."
+  git stash
+  echo
+  exit 0
+fi
+
+exit 1

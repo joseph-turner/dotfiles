@@ -38,7 +38,13 @@ if [[ $check = true ]]; then
   [[ $(grep ".nvmrc" <<< $gdiff) ]] && nvm=true
 fi
 
+if git conditional-stash; then
+  stashed=1
+fi
+
 git merge "$branch"
+
+[[ $stashed == '1' ]] && g stash pop
 
 function update_dep() {
   echo
