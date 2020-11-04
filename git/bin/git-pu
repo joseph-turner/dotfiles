@@ -16,9 +16,10 @@ function push() {
 }
 
 while ! push; do
-  printf "$fg[red]\n"
-  read -sk "?Push Failed! Check network connection and try again?"$'\n'
-  printf "$reset_color"
+  printf "\n$fg[red]Push Failed!$reset_color\n"
+  if read -qs "?Press 'Y' to pull latest and then try again, otherwise check network connection and press any key to try again?"$'\n'; then
+    git up
+  fi
 done
 
 echo "\n$fg[green]Push successful!$reset_color\n"

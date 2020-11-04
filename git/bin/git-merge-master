@@ -39,19 +39,6 @@ function update_node() {
   nvm use
 }
 
-function git_check() {
-  git diff --check || git diff --check --cached
-}
-
-function wait_to_push() {
-  while true; do
-    ! git_check && break || echo "\nConflicts detected!\n"
-    read -sk "?Press any key when conflicts are resolved"$'\n'
-    echo
-  done
-  git merge --continue
-}
-
 # if already on the default branch (master)
 if [[ "$working_branch" == "$default_branch" ]]; then
     git conditional-stash
@@ -78,7 +65,7 @@ if $(git show-ref --verify --quiet "refs/heads/$default_branch"); then
 
     # if rebase flag is on it will rebase
     if [[ $rebase == '0' ]]; then
-      git merge --no-edit $default_branch || wait_to_push
+      git merge --no-edit $default_branch || git conflicts
     else
       git rebase $default_branch
     fi

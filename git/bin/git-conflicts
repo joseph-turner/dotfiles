@@ -1,0 +1,17 @@
+#!/usr/local/bin/zsh
+
+autoload colors; colors
+
+function git_check() {
+  git diff --check || git diff --check --cached
+}
+
+while ! git_check; do
+  echo "\n$fg[red]Conflicts detected!$reset_color\n"
+  read -sk "?Press any key when conflicts are resolved"$'\n'
+  echo
+done
+
+if [[ `git merge HEAD &> /dev/null` -ne 0 ]]; then
+  git merge --continue
+fi

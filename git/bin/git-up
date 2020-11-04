@@ -43,7 +43,7 @@ if git conditional-stash; then
   stashed=1
 fi
 
-git merge "$branch"
+git merge "$branch" || git conflicts
 
 [[ $stashed == '1' ]] && g stash pop
 

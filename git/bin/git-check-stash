@@ -10,7 +10,7 @@ if [[ ! -z $stash_name ]]; then
   echo "\n$fg[cyan]You have stashed changes from this branch!\n$reset_color"
 
   if read -q "?Do you want to pop the changes from stash? (y/N)"$'\n'; then
-    git stash pop "$stash_name"
+    git stash pop "$stash_name" || git conflicts
   else
     echo "$fg[yellow]Leaving changes in stash. Don't forget them.$reset_color"
   fi
