@@ -30,7 +30,7 @@ if [[ -n $deleted ]]; then
 
   local darr=($(echo $deleted))
   for del in $darr; do
-    local del_cd=$(git log -1 --date=relative --format=%cd -- $del)
+    local del_cd=$(git log -1 --date=relative --format=%cd $del)
     echo "Last local commit was made $fg[red]$del_cd$reset_color\n"
     if read -q "?Do you want to remove $fg[yellow]$del$reset_color? (y/N)"; then
       echo

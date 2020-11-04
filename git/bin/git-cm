@@ -23,6 +23,11 @@ while getopts ":p:" opt; do
 done
 shift "$((OPTIND-1))"
 
-git add -A && git commit -m $1 && echo "$fg[green]\nCommit successful!\n$reset_color" || (echo "$fg[red]Commit failed$reset_color" && push=0)
+if git add -A && git commit -m "'$*'"; then
+  echo "$fg[green]\nCommit successful!$reset_color"
+else
+  echo "$fg[red]Commit failed$reset_color"
+  push=0
+fi
 
-[[ $push == 1 ]] && echo "Pushing changes..." && git pu && echo "$fg[green]Push successful!$reset_color" || echo "$fg[red]Push Failed! Check Network and try again!$reset_color"
+[[ $push == 1 ]] && git pu || echo

@@ -1,5 +1,7 @@
 #!/usr/local/bin/zsh
 
+autoload colors; colors
+
 while getopts "pr" opt; do
   case $opt in
     p)
@@ -37,23 +39,31 @@ function update_node() {
   nvm use
 }
 
-function conditional_stash() {
-  # If dirty, stash
-  [[ ! -z $(git diff --stat) ]] && echo "Uncommitted changes found." && echo "Stashing..." && git stash && stashed=true && echo
+function git_check() {
+  git diff --check || git diff --check --cached
+}
+
+function wait_to_push() {
+  while true; do
+    ! git_check && break || echo "\nConflicts detected!\n"
+    read -sk "?Press any key when conflicts are resolved"$'\n'
+    echo
+  done
+  git merge --continue
 }
 
 # if already on the default branch (master)
 if [[ "$working_branch" == "$default_branch" ]]; then
-    conditional_stash
+    git conditional-stash
     echo "Already on $default_branch. Executing pull..."
     git up
     [[ $stashed == "true" ]] && echo && git stash pop
-    exit 0;
+    exit 0
 fi
 
 # Check if the "default_branch" exists
 if $(git show-ref --verify --quiet "refs/heads/$default_branch"); then
-    conditional_stash
+    git conditional-stash
 
     # Checkout default_branch and pull
     git checkout "$default_branch" && git up -C
@@ -67,12 +77,16 @@ if $(git show-ref --verify --quiet "refs/heads/$default_branch"); then
     [[ $(grep ".nvmrc" <<< $gdiff) ]] && nvm=true
 
     # if rebase flag is on it will rebase
-    [[ $rebase == '0' ]] && git merge --no-edit $default_branch || git rebase $default_branch
+    if [[ $rebase == '0' ]]; then
+      git merge --no-edit $default_branch || wait_to_push
+    else
+      git rebase $default_branch
+    fi
 
     bounce
 
     [[ $nvm == true ]] && update_node
-    [[ $push == '1' ]] && printf "\nPushing changes\n" && git pu
+    [[ $push == '1' ]] && echo "\nPushing changes\n" && git pu
 
     # If shashed, pop out changes
     [[ $stashed == "true" ]] && echo && git stash pop

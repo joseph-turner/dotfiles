@@ -4,7 +4,10 @@ autoload colors; colors
 
 # Removes node_modules folder and reinstalls it
 # Return early if there's no package.json
-[[ ! -a "./package.json" ]] && echo "$fg[red]No package.json present$reset_color" && return 1
+if [[ ! -a "./package.json" ]]; then
+  echo "$fg[red]No package.json present$reset_color"
+  return 1
+fi
 
 usage() {
   echo "usage: bounce [<options>]"
@@ -22,6 +25,7 @@ inst() {
 }
 
 reinst() {
+  echo
   echo "removing ./node_modules"
   rm -rf "./node_modules"
   echo
@@ -53,7 +57,11 @@ while getopts "fh" opt; do
 done
 shift "$((OPTIND-1))"
 
-[[ ! -d "./node_modules" ]] && inst && return 0
+if [[ ! -d "./node_modules" ]]; then
+  echo "\nNode modules not installed"
+  inst
+  return 0
+fi
 
 # Attempt to cut time by using `yarn check` if available
 if echo "$fg[cyan]Checking node modules...$reset_color" && yarn check --verify-tree &> /dev/null; then

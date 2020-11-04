@@ -16,7 +16,7 @@ usage() {
 }
 
 exists() {
-  git rev-parse --verify --quiet $1 && echo "Branch already exists."
+  git rev-parse --verify --quiet $1 && echo "Branch already exists.\n"
 }
 
 ask_merge_master() {
@@ -26,12 +26,12 @@ ask_merge_master() {
   return 1
 }
 
-unstash() {
-  [[ $stashed == 1 ]] && echo && git stash pop
+stash() {
+  git conditional-stash && stashed=1
 }
 
-stash() {
-  [[ ! -z $(git diff --stat) ]] && echo "Uncommitted changes found." && echo "Stashing..." && git stash && stashed=1
+unstash() {
+  [[ $stashed == 1 ]] && echo && git stash pop
 }
 
 while getopts ":B:b:lmr:" opt; do
@@ -40,7 +40,7 @@ while getopts ":B:b:lmr:" opt; do
       if exists $OPTARG; then
         stash
         git checkout $OPTARG && ask_merge_master $OPTARG && git merge-master
-        unstash
+        git check-stash
         return 0
       fi
 
@@ -48,7 +48,7 @@ while getopts ":B:b:lmr:" opt; do
       git checkout master
       git up
       git checkout -b $OPTARG
-      unstash
+      git check-stash
       return 0
       ;;
     b) # Checkout new branch based on currently checked out branch
@@ -63,11 +63,14 @@ while getopts ":B:b:lmr:" opt; do
       return 0
       ;;
     m) # Checkout master branch
-      git checkout master || (stash && (echo && echo "Stashed Changes!"))
+      stash
+      git checkout master
+      git check-stash
       return 0
       ;;
     r) # Checkout recent branch
       git recent -e $OPTARG
+      git check-stash
       return 0
       ;;
     \?)
@@ -75,8 +78,8 @@ while getopts ":B:b:lmr:" opt; do
       return 1
       ;;
     : )
-      [[ $OPTARG == 'r' ]] && git recent -e && return 0
-      echo "Invalid option: -$OPTARG requires an argument" 1>&2
+      [[ $OPTARG == 'r' ]] && git recent -e && git check-stash && return 0
+      echo "$fg[orange]Invalid option: -$OPTARG requires an argument$reset_color" 1>&2
       usage
       return 1
       ;;
@@ -86,5 +89,12 @@ done
 shift $((OPTIND -1))
 
 stash
+
 git checkout $@
-[[ $stashed == 1 ]] && echo "You have stashed changes!\n" && git stash list && echo && (read -q "?Do you want to pop the changes from stash? (y/N)" && unstash || echo "Leaving changes in stash. Don't forget them.")
+
+if [[ $stashed == 1 ]]; then
+  unstash
+  return 0
+else
+  git check-stash $@
+fi

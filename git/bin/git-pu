@@ -1,8 +1,24 @@
 #!/usr/local/bin/zsh
 
-# check for remote tracking branch and push changes creating a new remote branch if one doesn't exist
-if [[ -z $(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)) ]]; then \
-  git push -u origin $(git rev-parse --abbrev-ref HEAD); \
-else \
-  git push; \
-fi
+autoload colors; colors
+
+local success
+
+
+function push() {
+  echo "\nPushing changes...\n"
+  # check for remote tracking branch and push changes creating a new remote branch if one doesn't exist
+  if [[ -z $(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)) ]]; then \
+    git push -u origin $(git rev-parse --abbrev-ref HEAD); \
+  else \
+    git push; \
+  fi
+}
+
+while ! push; do
+  printf "$fg[red]\n"
+  read -sk "?Push Failed! Check network connection and try again?"$'\n'
+  printf "$reset_color"
+done
+
+echo "\n$fg[green]Push successful!$reset_color\n"

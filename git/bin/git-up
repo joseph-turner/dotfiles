@@ -2,7 +2,8 @@
 
 autoload colors; colors
 
-local check=true
+local check=0
+local stashed
 
 while getopts "C" opt; do
   case $opt in
@@ -32,8 +33,8 @@ git fetch --prune origin
 
 # check for yarn.lock and set dep
 # check for .nvmrc and set nvm
-local gdiff=`git diff --name-only "$branch"`
-if [[ $check = true ]]; then
+if [[ $check = 0 ]]; then
+  local gdiff=`git diff --name-only "$branch"`
   [[ $(grep "yarn.lock" <<< $gdiff) ]] && dep=true
   [[ $(grep ".nvmrc" <<< $gdiff) ]] && nvm=true
 fi

@@ -1,0 +1,19 @@
+#!/usr/local/bin/zsh
+
+autoload colors; colors
+
+local branch
+[[ -z $@ ]] && branch=`git branch --show-current` || branch=$@
+local stash_name=`git stash list | grep "WIP on $branch" | cut -d ':' -f1`
+
+if [[ ! -z $stash_name ]]; then
+  echo "\n$fg[cyan]You have stashed changes from this branch!\n$reset_color"
+
+  if read -q "?Do you want to pop the changes from stash? (y/N)"$'\n'; then
+    git stash pop "$stash_name"
+  else
+    echo "$fg[yellow]Leaving changes in stash. Don't forget them.$reset_color"
+  fi
+else
+  exit 0
+fi
