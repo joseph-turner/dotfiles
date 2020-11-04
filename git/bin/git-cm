@@ -21,11 +21,8 @@ while getopts ":p:" opt; do
       ;;
   esac
 done
-shift "$((OPTIND-1))"
 
-message=`echo $@ | cut -d ' ' -f2-`
-
-if git add -A && git commit -m "$message"; then
+if git add -A && git commit -m "${@: -1}"; then
   echo "$fg[green]\nCommit successful!$reset_color"
 else
   echo "$fg[red]Commit failed$reset_color"
