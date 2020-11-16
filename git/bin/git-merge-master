@@ -65,9 +65,11 @@ if $(git show-ref --verify --quiet "refs/heads/$default_branch"); then
 
     # if rebase flag is on it will rebase
     if [[ $rebase == '0' ]]; then
-      git merge --no-edit $default_branch || git conflicts
+      git merge --no-edit $default_branch
+      git conflicts
     else
       git rebase $default_branch
+      git conflicts
     fi
 
     bounce
