@@ -20,7 +20,7 @@ exists() {
 }
 
 ask_merge_master() {
-  if read -q "?Do you want to merge latest from master? (y/N)"; then
+  if read -qs "?Do you want to merge latest from master? (y/N)"$'\n'; then
     return 0
   fi
   return 1

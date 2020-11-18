@@ -40,6 +40,7 @@ alias yl="yarn lint"
 alias ylj="yarn lint:js"
 alias ylc="yarn lint:css"
 alias ytf="yt && yf"
+alias ytw="yarn test:watch"
 alias yst="nvm use && yarn && yarn start"
 # yarn charles => yarn chuck => yuck
 alias yuck="yarn charles"
