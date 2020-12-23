@@ -58,6 +58,8 @@ function update_node() {
   echo
   echo "Change detected in .nvmrc"
   echo
+  export NVM_DIR=~/.nvm
+  [[ -s $NVM_DIR/nvm.sh ]] && . "$NVM_DIR/nvm.sh"
   nvm use
 }
 
