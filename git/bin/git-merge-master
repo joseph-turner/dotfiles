@@ -20,7 +20,7 @@ while getopts "pr" opt; do
       ;;
   esac
 done
-shift "$((OPTIND-1))"
+shift $((OPTIND-1))
 
 # Accepts and argument of a branch name and it will merge the latest changes of that branch
 # Default branch is master

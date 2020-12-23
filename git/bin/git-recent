@@ -18,9 +18,6 @@ while getopts "hn:ler" opt; do
     l) # list mode (non-interactive)
       INTERACTIVE=0
       ;;
-    e) # validate existence
-      CHECK_EXISTENCE=1
-      ;;
     \*)
       echo "Nope"
       exit 1
@@ -35,8 +32,6 @@ shift $((OPTIND -1))
 
 NUM=${NUM-10} # default to 10 lines
 INTERACTIVE=${INTERACTIVE-1} # default to interactive
-CHECK_EXISTENCE=${CHECK_EXISTENCE-0} # default to *not* checking existence (faster)
-COLUMNS=80
 
 BRANCHES=(
   $(git reflog |
@@ -45,7 +40,7 @@ BRANCHES=(
     awk ' !x[$0]++' | # Removes duplicates. See http://stackoverflow.com/questions/11532157
     egrep -v '^[a-f0-9]{40}$' | # remove hash results
     while read line; do # verify existence
-      ([[ $CHECK_EXISTENCE = '0' ]] || git rev-parse --verify "$line" &>/dev/null) && echo "$line"
+      git rev-parse --verify "$line" &>/dev/null && echo "$line"
     done |
     head -n "$NUM"
   )
@@ -63,5 +58,7 @@ if [[ $INTERACTIVE = '1' ]]; then
 
   git checkout "$d"
 else
-  printf '%s\n' "${BRANCHES[@]}"
+  for i in {1..$#BRANCHES}; do
+    printf '%s\n' "$i=${BRANCHES[i]}"
+  done
 fi

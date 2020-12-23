@@ -4,22 +4,44 @@ autoload colors; colors
 
 local success
 
-
 function push() {
   echo "\nPushing changes...\n"
   # check for remote tracking branch and push changes creating a new remote branch if one doesn't exist
-  if [[ -z $(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)) ]]; then \
-    git push -u origin $(git rev-parse --abbrev-ref HEAD); \
-  else \
-    git push; \
+  if [[ -z $(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)) ]]; then
+    git push -u origin $(git rev-parse --abbrev-ref HEAD);
+  else
+    git push;
   fi
 }
 
 while ! push; do
   printf "\n$fg[red]Push Failed!$reset_color\n"
-  if read -qs "?Press 'Y' to pull latest and then try again, otherwise check network connection and press any key to try again?"$'\n'; then
-    git up
-  fi
+  TRY_AGAIN="Try again"
+  PULL_FIRST="Pull first and then try again"
+  QUIT="Exit"
+  CHOICES=(
+    $TRY_AGAIN
+    $PULL_FIRST
+    $QUIT
+  )
+  PS3="Choose an action: "
+  select CHOICE in "${CHOICES[@]}"; do
+    case $CHOICE in
+      $TRY_AGAIN)
+        break
+        ;;
+      $PULL_FIRST)
+        git up
+        break
+        ;;
+      $QUIT)
+        exit 1
+        ;;
+    esac
+  done
+  # if read -qs "?Press 'Y' to pull latest and then try again, otherwise check network connection and press any key to try again?"$'\n'; then
+  #   git up
+  # fi
 done
 
 echo "\n$fg[green]Push successful!$reset_color\n"

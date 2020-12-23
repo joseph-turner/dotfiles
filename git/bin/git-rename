@@ -6,11 +6,16 @@ usage() {
   echo "$fg[blue]usage: (g|git) rename [<old-branch>] <new-branch>$reset_color"
 }
 
-while getopts "h" opt; do
+while getopts "hX:" opt; do
   case $opt in
     h)
       usage
       exit 1
+      ;;
+    X)
+      # all extensions in a dir matching pattern
+      # reqires old extension pattern and new extension
+      # cancels the branch rename
       ;;
     \?)
       usage
@@ -18,16 +23,23 @@ while getopts "h" opt; do
       ;;
   esac
 done
-shift (($OPTIND -1))
+shift $((OPTIND -1))
 
 [[ $# -eq 0 ]] && echo "(g|git) rename requires 1 or 2 arguments" usage && exit 1
 
+echo $@
 git branch -m $@
 
 local new_branch old_branch
-[[ $# -eq 2 ]] && old_branch=$1 new_branch=$2 || new_branch=$1 old_branch=`git branch | grep \* | cut -d ' ' -f2`
+if [[ $# -eq 2 ]]; then
+  old_branch=$1
+  new_branch=$2
+else
+  new_branch=$1
+  old_branch=`git branch --show-current`
+fi
 
-if [[ $(git show-branch remotes/origin/$old_branch) ]]; do
+if [[ $(git show-branch remotes/origin/$old_branch &> /dev/null) ]]; then
   [[ $(git push origin :$old_branch $new_branch) ]] || echo "Attempt to rename remote branch failed"
   git push origin -u $new_branch
 fi

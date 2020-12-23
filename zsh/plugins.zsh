@@ -9,7 +9,7 @@ source ~/.zplug/init.zsh
 zplug "zplug/zplug", hook-build:'zplug --self-manage'
 zplug "b4b4r07/enhancd", use:init.sh
 zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
-zplug "sobolevn/wakatime-zsh-plugin", use:wakatime.plugin.zsh
+# zplug "sobolevn/wakatime-zsh-plugin", use:wakatime.plugin.zsh
 
 # zplug "plugins/git",        from:oh-my-zsh, if:"which git"
 # zplug "plugins/gitfast",    from:oh-my-zsh, if:"which git"
@@ -18,7 +18,7 @@ zplug "sobolevn/wakatime-zsh-plugin", use:wakatime.plugin.zsh
 # zplug "plugins/git-flow",   from:oh-my-zsh, if:"which gitflow"
 
 # zplug "plugins/ng",         from:oh-my-zsh, if:"which ng"
-zplug "plugins/nvm",        from:oh-my-zsh, if:"which node"
+zplug "plugins/nvm",        from:oh-my-zsh, if:"which nvm"
 zplug "plugins/node",       from:oh-my-zsh, if:"which node"
 zplug "plugins/npm",        from:oh-my-zsh, if:"which npm"
 zplug "plugins/yarn",       from:oh-my-zsh, if:"which yarn"

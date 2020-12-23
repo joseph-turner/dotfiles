@@ -1,0 +1,84 @@
+#!/usr/local/bin/zsh
+#compdef git
+
+autoload colors; colors
+
+_g() {
+  local state ret=1
+  local -a subcmds
+  subcmds=(
+    "bclean:clean local repo"
+    "check-stash:check stash for changes involving a branch"
+    "cm:stages and commits current changes"
+    "cmp:stages, commits and pushes current changes"
+    "co:more than just an alias for $fg[green]git checkout$reset_color"
+    "conditional-stash:checks for uncommitted changes and stashes them"
+    "flow:manages branches for different purposes"
+    "merge-master:<mm[p]> merge latest changes from master into current branch"
+    "mmp:merge latest changes from master into current branch and push"
+    "rename:renames branch"
+    "pu:push changes from current branch, set upstream if new branch"
+    "up:pull latest changes and check for yarn.lock changes/update packages"
+  )
+  # # _describe 'command' subcmds
+  _arguments -C '1: :->cmds' '*: :->args' && ret=0
+
+  case $state in
+    cmds)
+      _describe -t commands "$fg[cyan]custom git commands$reset_color" subcmds && ret=0
+      ;;
+    args)
+      case $words[2] in
+        co)
+          __git_branches && ret=0
+          return ret
+          ;;
+
+        cor|recent)
+          __git_recent && ret=0
+          return ret
+          ;;
+
+        flow)
+          _git-flow "$@"
+          return ret
+          ;;
+
+        merge-master|mm)
+          __git_merge_master "$@"
+          return ret
+          ;;
+
+        # All custom git commands that don't have arguments
+        bclean|check-stash|cm|conditional-stash|merge-master|mm|pu|up)
+          (( ret )) && _message "no more arguments"
+          return ret
+          ;;
+
+        *)
+          _git "$@"
+          return ret
+          ;;
+      esac
+      ;;
+    *)
+      _git "$@"
+      return ret
+  esac
+
+  _git "$@"
+
+  return ret
+}
+
+__git_branches() {
+  _values "$fg[cyan]branches$reset_color" $(echo "$(git branch)")
+}
+
+__git_recent() {
+  _values "$fg[cyan]recent branches$reset_color" $(echo "$(git recent -l)")
+}
+
+__git_merge_master() {
+
+}

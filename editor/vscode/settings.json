@@ -22,7 +22,8 @@
     "*.js": "javascriptreact",
     ".jenkins": "json",
     ".browserslistrc": "shellscript",
-    "*.xml": "xml"
+    "*.xml": "xml",
+    ".env*": "env"
   },
   "files.exclude": {
     "**/.DS_Store": true,
@@ -62,10 +63,10 @@
     },
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
-    "javascript.updateImportsOnFileMove.enabled": "always",
     "eslint.packageManager": "yarn",
     "files.trimTrailingWhitespace": true,
     "emmet.includeLanguages": {
+      "typescript": "typescriptreact",
       "javascript": "javascriptreact"
     },
     "editor.fontLigatures": true,
@@ -84,7 +85,7 @@
     "oneDarkPro.bold": true,
     "oneDarkPro.vivid": true,
     "oneDarkPro.italic": true,
-    "workbench.colorTheme": "Night Owl",
+    "workbench.colorTheme": "Andromeda Italic",
     "terminal.external.osxExec": "iTerm.app",
     "terminal.integrated.fontFamily": "\"Dank Mono\", \"FuraCode Nerd Font\"",
     "diffEditor.ignoreTrimWhitespace": false,
@@ -92,5 +93,15 @@
     "eslint.alwaysShowStatus": true,
     "stylelint.packageManager": "yarn",
     "emmet.showExpandedAbbreviation": "inMarkupAndStylesheetFilesOnly",
-    "html-css-class-completion.enableEmmetSupport": true
+    "html-css-class-completion.enableEmmetSupport": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "prettier.singleQuote": true,
+    "emmet.triggerExpansionOnTab": true,
+    "vs-kubernetes": {
+      "vs-kubernetes.helm-path.mac": "/Users/jturner/.vs-kubernetes/tools/helm/darwin-amd64/helm",
+      "vs-kubernetes.kubectl-path.mac": "/Users/jturner/.vs-kubernetes/tools/kubectl/kubectl",
+      "vs-kubernetes.minikube-path.mac": "/Users/jturner/.vs-kubernetes/tools/minikube/darwin-amd64/minikube",
+      "vs-kubernetes.draft-path.mac": "/Users/jturner/.vs-kubernetes/tools/draft/darwin-amd64/draft"
+    }
 }

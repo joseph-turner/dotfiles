@@ -1,6 +1,9 @@
 # =============================================================================
 #                                   Variables
 # =============================================================================
+autoload colors; colors
+
+# zmodload zsh/zprof
 
 export LANG="en_US.UTF-8"
 export LC_ALL="$LANG"
@@ -12,15 +15,23 @@ export NVM_DEFAULT="lts/*"
 # Directories to be prepended to $PATH
 # =============================================================================
 
+ZSH_SOURCES_DIR=$(dirname $(readlink $HOME/.zshrc))
+
+local BREW_DIR="/usr/local"
+if [[ ! -d "/usr/local" ]]; then
+  echo "\n$fg[red]Brew directory has changed!"
+  echo "Update in $ZSH_SOURCES_DIR/.zshrc\n"
+fi
+
 local -a dirs_to_prepend
 dirs_to_prepend=(
   "/opt/local/bin"
   "/usr/local/sbin"
-  "/usr/local"
+  "$BREW_DIR"
   "$HOME/bin"
   "$HOME/bin/git"
-  "$(brew --prefix coreutils)/libexec/gnubin" # Add brew-installed GNU core utilities bin
-  "$(brew --prefix)/share/npm/bin" # Add npm-installed package bin
+  # "$(brew --prefix coreutils)/libexec/gnubin" # Add brew-installed GNU core utilities bin
+  # "$(brew --prefix)/share/npm/bin" # Add npm-installed package bin
 )
 
 # Explicitly configured $PATH
@@ -50,12 +61,9 @@ export GIT_FRIENDLY_NO_COMPOSER=true
 
 # List of files that need to be sourced outside of the dotfiles dir
 local sources=(
-  "$(brew --prefix nvm)/nvm.sh"
   "~/.zshrc.local"
   "~/.iterm2_shell_integration.zsh"
 )
-
-ZSH_SOURCES_DIR=$(dirname $(readlink $HOME/.zshrc))
 
 # This will grab all of the zsh files in the $DOTFILES_DIR/zsh folder
 if [[ $ZSH_SOURCES_DIR ]]; then
@@ -79,64 +87,15 @@ zplug load
 
 # Adds a hook to look for nvmrc on folder change
 autoload -U add-zsh-hook
-# Load the proper version of node
-load-nvmrc-lts() {
-  # Only run in directories that need Node
-  if [[ -f "./package.json" ]]; then
-    # Set default alias to LTS
-    nvm alias default ${NVM_DEFAULT:-"lts/*"} &> /dev/null
-    # Get current version
-    local node_version="$(nvm version)"
-    # Get default version
-    local lts_version="$(nvm version-remote --lts)"
-    # Get nvmrc if exists
-    local nvmrc_path="$(nvm_find_nvmrc)"
-
-    # If there is an nvmrc
-    if [ -n "$nvmrc_path" ]; then
-      # Get the latest version specified in nvmrc
-      local nvmrc_version=$(nvm version-remote "$(cat "${nvmrc_path}")")
-
-      # If the current version is not the specified version
-      if [ "$nvmrc_version" != "$node_version" ]; then
-
-        # If the specified version is installed
-        if $(nvm version "${nvmrc_version}" &> /dev/null); then
-          # Use it
-          nvm use
-
-        # Otherwise
-        else
-          # Install it
-          nvm install
-        fi
-      fi
-
-    # If there is no nvmrc and the current version is not the latest lts version
-    elif [ "$node_version" != "$lts_version" ]; then
-      # and if latest lts version is installed
-      if $(nvm version "$lts_version" &> /dev/null); then
-        # use it
-        nvm use --lts
-
-      # Otherwise
-      else
-        # install the current lts version and set the default alias
-        nvm install --lts
-      fi
-    fi
-  fi
-}
 add-zsh-hook chpwd load-nvmrc-lts
-load-nvmrc-lts
+# load-nvmrc-lts
 
 # =============================================================================
 #                                   Options
 # =============================================================================
 
 # improved less option
-export LESS="-FiJMRWX -x4 -z-4 "
-export LESS="--tabs=4 --no-init --LONG-PROMPT --ignore-case --quit-if-one-screen --RAW-CONTROL-CHARS"
+export LESS="-FiJMRWX -x4 -z-4 --tabs=4 --no-init --LONG-PROMPT --ignore-case --quit-if-one-screen --RAW-CONTROL-CHARS"
 
 # Watching other users
 #WATCHFMT="%n %a %l from %m at %t."
@@ -168,25 +127,8 @@ setopt pushd_minus              # Reference stack entries with "-".
 
 setopt extended_glob
 
-
-# =============================================================================
-#                                 Completions
-# =============================================================================
-
-zstyle ':completion:*' rehash true
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*:descriptions' format '%B%d%b'
-zstyle ':completion:*:messages' format '%d'
-zstyle ':completion:*:warnings' format 'No matches for: %d'
-zstyle ':completion:*' group-name ''
-
-# case-insensitive (all), partial-word and then substring completion
-zstyle ":completion:*" matcher-list \
-  "m:{a-zA-Z}={A-Za-z}" \
-  "r:|[._-]=* r:|=*" \
-  "l:|=* r:|=*"
-
-zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}
-
 # TODO: add custom completions leveraging _git
-compdef _git2 git
+compdef _g git
+compdef _gatsby gatsby
+
+# zprof

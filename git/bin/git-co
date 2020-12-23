@@ -26,6 +26,13 @@ ask_merge_master() {
   return 1
 }
 
+ask_unstash() {
+  [[ $stashed != 1 ]] && return 1;
+  if read -qs "?Do you want to pop the changes stashed from the previous branch?"; then
+    echo && git stash pop
+  fi
+}
+
 stash() {
   git conditional-stash && stashed=1
 }
@@ -48,7 +55,7 @@ while getopts ":B:b:lmr:" opt; do
       git checkout master
       git up
       git checkout -b $OPTARG
-      git check-stash
+      ask_unstash
       return 0
       ;;
     b) # Checkout new branch based on currently checked out branch
@@ -69,7 +76,7 @@ while getopts ":B:b:lmr:" opt; do
       return 0
       ;;
     r) # Checkout recent branch
-      git recent -e $OPTARG
+      git recent $OPTARG
       git check-stash
       return 0
       ;;
@@ -78,7 +85,7 @@ while getopts ":B:b:lmr:" opt; do
       return 1
       ;;
     : )
-      [[ $OPTARG == 'r' ]] && git recent -e && git check-stash && return 0
+      [[ $OPTARG == 'r' ]] && git recent && git check-stash && return 0
       echo "$fg[orange]Invalid option: -$OPTARG requires an argument$reset_color" 1>&2
       usage
       return 1

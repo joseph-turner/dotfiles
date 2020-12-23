@@ -30,7 +30,7 @@
       "\t\t\t;;",
       "\tesac",
       "done",
-      "shift \"$((OPTIND-1))\"",
+      "shift \"$((OPTIND -1))\""
     ]
   }
 }

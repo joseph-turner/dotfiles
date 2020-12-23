@@ -1,48 +1,33 @@
-# custom git shortcuts
-function _git2() {
-  _git "$@"
-  local state ret=1
-  local -a subcmds
-  subcmds=(
-    'bclean:clean local repo'
-    'co:checkout new branch or recent branch'
-    'mm:merge latest changes from master into current branch'
-    'pu:push changes from current branch, set upstream if new branch'
-    'up:pull latest changes and check for yarn.lock changes/update packages'
-  )
-  # # _describe 'command' subcmds
-  _arguments -C '1: :->cmds' '*: :->args' && ret=0
+#!/usr/local/bin/zsh
 
-  __git_branches() {
-    echo "$(git branch)"
-  }
+# =============================================================================
+#                                 Completions
+# =============================================================================
+autoload colors; colors
 
-  __git_recent() {
-    echo "$(git recent -l)"
-  }
+zstyle ':completion:*' rehash true
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+zstyle ':completion:*' group-name ''
 
-  case $state in
-    cmds)
-      _describe -t commands 'g commands' subcmds && ret=0
-      ;;
-    args)
-      case $words[2] in
-        (co)
-          _values 'branches' $(__git_branches) && ret=0
-          ;;
+# case-insensitive (all), partial-word and then substring completion
+zstyle ":completion:*" matcher-list \
+  "m:{a-zA-Z}={A-Za-z}" \
+  "r:|[._-]=* r:|=*" \
+  "l:|=* r:|=*"
 
-        (cor)
-          _values 'recent branches' $(__git_recent) && ret=0
-          ;;
+zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}
 
-        *)
-          (( ret )) && _message 'no more arguments'
-          ;;
-      esac
-      ;;
-    *)
-      (( ret )) && _message 'no more commands'
-  esac
+completions_dir="$(dirname $(readlink $HOME/.zshrc))/completions"
+local files=( $completions_dir/* )
 
-  return ret
-}
+for i in ${files[@]}; do
+  if [[ -f $i ]]; then
+    # echo "Loading $i"
+    source $i
+  else
+    # echo "$i not found"
+  fi
+done

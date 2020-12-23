@@ -20,7 +20,7 @@ while getopts "C" opt; do
       ;;
   esac
 done
-shift "$((OPTIND-1))"
+shift $((OPTIND -1))
 
 local branch=$(git for-each-ref --format='%(upstream:short)' "$(git symbolic-ref -q HEAD)")
 [[ -z $branch ]] && echo "Current branch (`git rev-parse --abbrev-ref HEAD`) has no upstream" && exit 1

@@ -101,6 +101,7 @@ function reload() {
           z)
               unset files
               source "$HOME/.zshrc"
+              return 0
               break;;
           ?)
               echo "unknown option: -$opt"
@@ -108,7 +109,7 @@ function reload() {
               break;;
       esac
   done
-  shift $((OPTIND-1))
+  shift $((OPTIND -1))
 
   if [[ -n ${files[@]} ]]; then
       ZSH_SOURCES_DIR=$(dirname $(readlink $HOME/.zshrc))
@@ -121,4 +122,69 @@ function reload() {
           fi
       done
   fi
+}
+
+# Load the proper version of node
+load-nvmrc-lts() {
+  # Only run in directories that need Node
+  [[ ! -f "./package.json" ]] && return 0;
+
+  # Set default alias to LTS
+  nvm alias default ${NVM_DEFAULT:-"lts/*"} &> /dev/null
+  # Get current version
+  local node_version="$(nvm version)"
+  # Get nvmrc if exists
+  local nvmrc_path="$(nvm_find_nvmrc)"
+
+  local nvmrc_version="v`cat $nvmrc_path`"
+
+  [[ $node_version = $nvmrc_version ]] && return 0
+
+  # If there is an nvmrc
+  if [ -n "$nvmrc_path" ]; then
+    # Get the latest version specified in nvmrc
+    local nvmrc_version=$(nvm version-remote "$(cat "${nvmrc_path}")")
+
+    # If the current version is not the specified version
+    if [ "$nvmrc_version" != "$node_version" ]; then
+
+      # If the specified version is installed
+      if $(nvm version "${nvmrc_version}" &> /dev/null); then
+        # Use it
+        nvm use
+
+      # Otherwise
+      else
+        # Install it
+        nvm install
+      fi
+    fi
+
+  # If there is no nvmrc and the current version is not the latest lts version
+  else
+    local global_nvmrc="$HOME/.nvmrc"
+    local lts_version=`cat $global_nvmrc`
+    # if file is more than 3 days old
+    if [[ ! -f $global_nvmrc || `find $global_nvmrc -mmin +4320` ]]; then
+      lts_version="$(nvm version-remote --lts)"
+      echo $lts_version >! $global_nvmrc
+    fi
+    # Get default version
+    if [ "$node_version" != "$lts_version" ]; then
+      # and if latest lts version is installed
+      if $(nvm version "$lts_version" &> /dev/null); then
+        # use it
+        nvm use --lts
+
+      # Otherwise
+      else
+        # install the current lts version and set the default alias
+        nvm install --lts
+      fi
+    fi
+  fi
+}
+
+wallpaper() {
+  sqlite3 $HOME/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '$1'" && killall Dock
 }

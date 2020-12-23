@@ -2,6 +2,8 @@
 
 autoload colors; colors
 
+local start
+
 # Removes node_modules folder and reinstalls it
 # Return early if there's no package.json
 if [[ ! -a "./package.json" ]]; then
@@ -13,6 +15,7 @@ usage() {
   echo "usage: bounce [<options>]"
   echo
   echo "    -f            force reinstall node modules"
+  echo "    -s            runs start script after successful check/install of modules"
   echo "    -h            display this message"
   echo
 }
@@ -34,7 +37,7 @@ reinst() {
   yarn
 }
 
-while getopts "fh" opt; do
+while getopts "fhs" opt; do
   case $opt in
     f)
       reinst
@@ -42,6 +45,9 @@ while getopts "fh" opt; do
     h)
       usage
       return 0
+      ;;
+    s)
+      start="1"
       ;;
     \?)
       echo "$fg[yellow]Invalid option: -$OPTARG $reset_color"
@@ -55,7 +61,7 @@ while getopts "fh" opt; do
       ;;
   esac
 done
-shift "$((OPTIND-1))"
+shift "$((OPTIND -1))"
 
 if [[ ! -d "./node_modules" ]]; then
   echo "\nNode modules not installed"
@@ -71,3 +77,5 @@ else
     echo "$fg[cyan]Changes in node modules detected...$reset_color"
     reinst
 fi
+
+[[ $start == "1" ]] && yarn start

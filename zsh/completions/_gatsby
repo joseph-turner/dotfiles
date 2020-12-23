@@ -1,0 +1,31 @@
+#!/usr/local/bin/zsh
+
+_gatsby() {
+  local state ret=1
+  local -a subcmds
+  subcmds=(
+    "build:runs production level build, prepares site for deploy"
+    "clean:wipes the cache folder and public directories"
+    "develop:starts development server"
+    "info:displays environment information"
+    "new:run an interactive shell asking how to create a new Gatsby site"
+    "plugin:run commands pertaining to gatsby plugins"
+    "Repl:get a Node.js REPL (interactive shell) with context of your Gatsby environment"
+    "serve:serves production build of site"
+  )
+
+  _arguments -C '1: :->cmds' '*: :->args' && ret=0
+
+  case $state in
+    cmds)
+      _describe -t commands "$fg[cyan]gatsby commands$reset_color" subcmds && ret=0
+      ;;
+    args)
+      case $words[2] in
+        *)
+          ;;
+      esac
+  esac
+
+  return ret
+}

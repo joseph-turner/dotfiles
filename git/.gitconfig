@@ -13,7 +13,7 @@
 
   # Commits/Pulls/Pushes
   a         = add -A
-  amend     = commit -a --amend --reuse-message = HEAD
+  amend     = commit -a --amend --no-edit
   cl        = "!f() { git clone $@; [[ -n $2 ]] && cd $2 || cd $(basename $_ .git); }; f" # changes directory after cloning repo
   cmp       = !git cm -p $@
   cp        = cherry-pick
