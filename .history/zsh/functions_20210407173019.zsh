@@ -125,7 +125,7 @@ function reload() {
 }
 
 y() {
-    load_nvm
+    echo "$@"
     yarn $@ || nvm use && yarn $@
 }
 

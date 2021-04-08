@@ -1,7 +1,6 @@
 #!/usr/local/bin/zsh
 
 autoload colors; colors
-
 local start
 
 # Removes node_modules folder and reinstalls it
@@ -24,7 +23,7 @@ inst() {
   echo
   echo "Installing modules..."
   echo
-  yarn
+  y
 }
 
 reinst() {
@@ -34,7 +33,7 @@ reinst() {
   echo
   echo "Reinstalling modules..."
   echo
-  yarn
+  y
 }
 
 while getopts "fhs" opt; do
@@ -78,4 +77,4 @@ else
     reinst
 fi
 
-[[ $start == "1" ]] && yarn start
+[[ $start == "1" ]] && y start

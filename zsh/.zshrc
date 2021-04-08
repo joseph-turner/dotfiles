@@ -47,6 +47,7 @@ done
 unset dirs_to_prepend
 
 export PATH
+fpath=( ~/bin "${fpath[@]}" )
 
 export GIT_FRIENDLY_NO_BUNDLE=true
 # export GIT_FRIENDLY_NO_NPM=true
@@ -61,8 +62,9 @@ export GIT_FRIENDLY_NO_COMPOSER=true
 
 # List of files that need to be sourced outside of the dotfiles dir
 local sources=(
-  "~/.zshrc.local"
-  "~/.iterm2_shell_integration.zsh"
+  "$HOME/.zshrc.local"
+  "$HOME/.iterm2_shell_integration.zsh"
+  "$HOME/bin/node"
 )
 
 # This will grab all of the zsh files in the $DOTFILES_DIR/zsh folder

@@ -125,7 +125,7 @@ function reload() {
 }
 
 y() {
-    load_nvm
+    unalias y
     yarn $@ || nvm use && yarn $@
 }
 

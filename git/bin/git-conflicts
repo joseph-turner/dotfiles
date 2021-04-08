@@ -3,7 +3,7 @@
 autoload colors; colors
 
 function git_check() {
-  git diff --check || git diff --check --cached
+  git diff --check && git diff --check --cached
 }
 
 while ! git_check; do
@@ -12,6 +12,7 @@ while ! git_check; do
   echo
 done
 
-if [[ `git merge HEAD &> /dev/null` -ne 0 ]]; then
+if [[ `git merge HEAD &> /dev/null` -ne 128 ]]; then
+  git add -A
   git merge --continue
 fi

@@ -11,7 +11,7 @@
     }
   },
   "colorize.activate_variables_support_beta": true,
-  "editor.fontFamily": "'FuraCode Nerd Font', monospace",
+  "editor.fontFamily": "'Dank Mono', monospace",
   "editor.fontWeight": "300",
   "editor.multiCursorModifier": "ctrlCmd",
   "editor.renderWhitespace": "all",
@@ -74,18 +74,15 @@
     "breadcrumbs.enabled": true,
     "editor.renderControlCharacters": true,
     "workbench.startupEditor": "welcomePage",
-    "typescript.validate.enable": false,
-    "javascript.validate.enable": false,
     "editor.cursorBlinking": "phase",
     "editor.cursorSmoothCaretAnimation": true,
     "editor.cursorStyle": "line-thin",
     "editor.fontSize": 14,
-    "javascript.suggest.enabled": false,
     "material-icon-theme.activeIconPack": "react_redux",
     "oneDarkPro.bold": true,
     "oneDarkPro.vivid": true,
     "oneDarkPro.italic": true,
-    "workbench.colorTheme": "Andromeda Italic",
+    "workbench.colorTheme": "Night Owl",
     "terminal.external.osxExec": "iTerm.app",
     "terminal.integrated.fontFamily": "\"Dank Mono\", \"FuraCode Nerd Font\"",
     "diffEditor.ignoreTrimWhitespace": false,
@@ -103,5 +100,26 @@
       "vs-kubernetes.kubectl-path.mac": "/Users/jturner/.vs-kubernetes/tools/kubectl/kubectl",
       "vs-kubernetes.minikube-path.mac": "/Users/jturner/.vs-kubernetes/tools/minikube/darwin-amd64/minikube",
       "vs-kubernetes.draft-path.mac": "/Users/jturner/.vs-kubernetes/tools/draft/darwin-amd64/draft"
-    }
+    },
+    "tabnine.experimentalAutoImports": true,
+    "todo-tree.general.tags": [
+      "BUG",
+      "HACK",
+      "FIXME",
+      "TODO",
+      "XXX",
+      "[ ]",
+      "[x]"
+    ],
+    "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
+    "cSpell.userWords": [
+      "clubo",
+      "lifecycles",
+      "omniture",
+      "ostk",
+      "popout"
+    ],
+    "hungryDelete.keepOneSpace": true,
+    "hungryDelete.considerIncreaseIndentPattern": true,
+    "hungryDelete.followAbovelineIndent": true
 }

@@ -124,11 +124,6 @@ function reload() {
   fi
 }
 
-y() {
-    load_nvm
-    yarn $@ || nvm use && yarn $@
-}
-
 # Load the proper version of node
 load-nvmrc-lts() {
   # Only run in directories that need Node

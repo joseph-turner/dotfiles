@@ -125,7 +125,6 @@ function reload() {
 }
 
 y() {
-    load_nvm
     yarn $@ || nvm use && yarn $@
 }
 
