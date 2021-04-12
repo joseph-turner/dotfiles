@@ -62,6 +62,8 @@ while getopts "fhs" opt; do
 done
 shift "$((OPTIND -1))"
 
+nvm use
+
 if [[ ! -d "./node_modules" ]]; then
   echo "\nNode modules not installed"
   inst

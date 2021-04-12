@@ -2,14 +2,35 @@
 #                                   Plugins
 # =============================================================================
 
-# Check if zplug is installed
-[ ! -d ~/.zplug ] && git clone https://github.com/zplug/zplug ~/.zplug
-source ~/.zplug/init.zsh
+autoload compinit; compinit
 
-zplug "zplug/zplug", hook-build:'zplug --self-manage'
-zplug "b4b4r07/enhancd", use:init.sh
-zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
-# zplug "sobolevn/wakatime-zsh-plugin", use:wakatime.plugin.zsh
+# Check if zinit is installed
+if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
+    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.zinit" && command chmod g-rwX "$HOME/.zinit"
+    command git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
+        print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
+        print -P "%F{160}▓▒░ The clone has failed.%f%b"
+fi
+
+source "$HOME/.zinit/bin/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+zinit light romkatv/powerlevel10k
+zinit wait lucid for \
+  b4b4r07/enhancd \
+  OMZP::brew \
+  OMZP::colored-man-pages \
+  OMZP::node \
+  OMZP::npm \
+  OMZP::nvm \
+  OMZP::sudo \
+  zsh-users/zsh-history-substring-search \
+  atinit"zicompinit; zicdreplay" \
+    zdharma/fast-syntax-highlighting \
+    zsh-users/zsh-completions \
+    zsh-users/zsh-autosuggestions \
 
 # zplug "plugins/git",        from:oh-my-zsh, if:"which git"
 # zplug "plugins/gitfast",    from:oh-my-zsh, if:"which git"
@@ -18,47 +39,7 @@ zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 # zplug "plugins/git-flow",   from:oh-my-zsh, if:"which gitflow"
 
 # zplug "plugins/ng",         from:oh-my-zsh, if:"which ng"
-zplug "plugins/nvm",        from:oh-my-zsh, if:"which nvm"
-zplug "plugins/node",       from:oh-my-zsh, if:"which node"
-zplug "plugins/npm",        from:oh-my-zsh, if:"which npm"
-zplug "plugins/yarn",       from:oh-my-zsh, if:"which yarn"
-
-zplug "plugins/sudo",       from:oh-my-zsh, if:"which sudo"
-
-if [[ $OSTYPE = (darwin)* ]]; then
-    zplug "plugins/osx",      from:oh-my-zsh
-    zplug "plugins/brew",     from:oh-my-zsh, if:"which brew"
-fi
-
-zplug "zsh-users/zsh-completions",              defer:0
-zplug "zsh-users/zsh-autosuggestions",          defer:2, on:"zsh-users/zsh-completions"
-zplug "zsh-users/zsh-syntax-highlighting",      defer:3, on:"zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-history-substring-search", defer:3, on:"zsh-users/zsh-syntax-highlighting"
-
 
 # =============================================================================
 #                              Plugin Settings
 # =============================================================================
-
-
-
-# =============================================================================
-#                                 Startup
-# =============================================================================
-
-# Install plugins if there are plugins that have not been installed
-if ! zplug check; then
-  printf "Install? [y/N]: "
-  if read -q; then
-    echo; zplug install
-  fi
-fi
-
-# History
-if zplug check "zsh-users/zsh-history-substring-search"; then
-  zmodload zsh/terminfo
-  bindkey "$terminfo[kcuu1]" history-substring-search-up
-  bindkey "$terminfo[kcud1]" history-substring-search-down
-  bindkey "^[[1;5A" history-substring-search-up
-  bindkey "^[[1;5B" history-substring-search-down
-fi

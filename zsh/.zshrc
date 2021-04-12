@@ -3,8 +3,6 @@
 # =============================================================================
 autoload colors; colors
 
-# zmodload zsh/zprof
-
 export LANG="en_US.UTF-8"
 export LC_ALL="$LANG"
 
@@ -79,18 +77,10 @@ for i in ${sources[@]}; do
   if [[ -f $i ]]; then
     # echo "Loading $i"
     source $i
-  else
-    # echo "$i not found"
+  # else
+  #   echo "$i not found"
   fi
 done
-
-# Then, source plugins and add commands to $PATH
-zplug load
-
-# Adds a hook to look for nvmrc on folder change
-autoload -U add-zsh-hook
-add-zsh-hook chpwd load-nvmrc-lts
-# load-nvmrc-lts
 
 # =============================================================================
 #                                   Options
@@ -126,11 +116,10 @@ setopt hist_save_no_dups        # Omit older commands in favor of newer ones.
 #setopt auto_pushd
 setopt pushd_ignore_dups        # Dont push copies of the same dir on stack.
 setopt pushd_minus              # Reference stack entries with "-".
+setopt promptsubst
 
 setopt extended_glob
 
 # TODO: add custom completions leveraging _git
 compdef _g git
 compdef _gatsby gatsby
-
-# zprof

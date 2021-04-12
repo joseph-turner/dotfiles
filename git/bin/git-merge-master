@@ -72,12 +72,13 @@ if $(git show-ref --verify --quiet "refs/heads/$default_branch"); then
     else
       git rebase $default_branch
       git conflicts
+      [[ $push == '1' ]] && git up # need to pull first if we're going to push after rebase
     fi
 
     bounce
 
     [[ $nvm == true ]] && update_node
-    [[ $push == '1' ]] && echo "\nPushing changes\n" && git pu
+    [[ $push == '1' ]] && git pu
 
     # If shashed, pop out changes
     [[ $stashed == "true" ]] && echo && git stash pop

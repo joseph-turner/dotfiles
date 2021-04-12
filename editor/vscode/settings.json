@@ -41,7 +41,6 @@
   "scss.lint.zeroUnits": "warning",
   "scss.showErrors": true,
   "terminal.integrated.fontSize": 15,
-  "window.zoomLevel": 0,
   "workbench.iconTheme": "material-icon-theme",
   "gitlens.advanced.messages": {
     "suppressCommitHasNoPreviousCommitWarning": false,
@@ -74,6 +73,10 @@
     "breadcrumbs.enabled": true,
     "editor.renderControlCharacters": true,
     "workbench.startupEditor": "welcomePage",
+<<<<<<< Updated upstream
+=======
+    "typescript.validate.enable": false,
+>>>>>>> Stashed changes
     "editor.cursorBlinking": "phase",
     "editor.cursorSmoothCaretAnimation": true,
     "editor.cursorStyle": "line-thin",
@@ -82,7 +85,11 @@
     "oneDarkPro.bold": true,
     "oneDarkPro.vivid": true,
     "oneDarkPro.italic": true,
+<<<<<<< Updated upstream
     "workbench.colorTheme": "Night Owl",
+=======
+    "workbench.colorTheme": "Noctis Azureus",
+>>>>>>> Stashed changes
     "terminal.external.osxExec": "iTerm.app",
     "terminal.integrated.fontFamily": "\"Dank Mono\", \"FuraCode Nerd Font\"",
     "diffEditor.ignoreTrimWhitespace": false,
@@ -101,6 +108,7 @@
       "vs-kubernetes.minikube-path.mac": "/Users/jturner/.vs-kubernetes/tools/minikube/darwin-amd64/minikube",
       "vs-kubernetes.draft-path.mac": "/Users/jturner/.vs-kubernetes/tools/draft/darwin-amd64/draft"
     },
+<<<<<<< Updated upstream
     "tabnine.experimentalAutoImports": true,
     "todo-tree.general.tags": [
       "BUG",
@@ -122,4 +130,16 @@
     "hungryDelete.keepOneSpace": true,
     "hungryDelete.considerIncreaseIndentPattern": true,
     "hungryDelete.followAbovelineIndent": true
+=======
+    "spotify.showSignOutButton": false,
+    "spotify.showSignInButton": false,
+    "spotify.showVolumeUpButton": true,
+    "spotify.showVolumeDownButton": true,
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "typescript.implementationsCodeLens.enabled": true,
+    "typescript.referencesCodeLens.enabled": true,
+    "typescript.suggest.completeFunctionCalls": true,
+    "typescript.tsserver.enableTracing": true,
+    "tabnine.experimentalAutoImports": true
+>>>>>>> Stashed changes
 }
