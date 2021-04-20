@@ -39,9 +39,6 @@ while ! push; do
         ;;
     esac
   done
-  # if read -qs "?Press 'Y' to pull latest and then try again, otherwise check network connection and press any key to try again?"$'\n'; then
-  #   git up
-  # fi
 done
 
 echo "\n$fg[green]Push successful!$reset_color\n"

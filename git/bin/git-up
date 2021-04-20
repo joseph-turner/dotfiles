@@ -26,10 +26,16 @@ local branch=$(git for-each-ref --format='%(upstream:short)' "$(git symbolic-ref
 [[ -z $branch ]] && echo "Current branch (`git rev-parse --abbrev-ref HEAD`) has no upstream" && exit 1
 local pkg=false
 local nvm=false
-echo "Merging from $branch"
-echo
 
-git fetch --prune origin
+echo "$fg[blue]Merging from $branch$reset_color\n"
+
+while ! git fetch --prune origin; do
+  echo "\n$fg[red]Error fetching latest $branch!$reset_color"
+  if read -q "?Press any key to continue to try again, \"N\" to abort."$'\n'; then
+    return 0
+  fi
+  exit 1
+done
 
 # check for yarn.lock and set dep
 # check for .nvmrc and set nvm

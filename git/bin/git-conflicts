@@ -2,6 +2,23 @@
 
 autoload colors; colors
 
+while getopts "r" opt; do
+  case $opt in
+    r)
+      rebase=1
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG"
+      return 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument"
+      return 1
+      ;;
+  esac
+done
+shift $((OPTIND-1))
+
 function git_check() {
   git diff --check && git diff --check --cached
 }
@@ -14,5 +31,5 @@ done
 
 if [[ `git merge HEAD &> /dev/null` -ne 128 ]]; then
   git add -A
-  git merge --continue
+  [[ $rebase = 1 ]] && git rebase --continue || git merge --continue
 fi

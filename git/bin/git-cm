@@ -16,7 +16,7 @@ while getopts ":p:" opt; do
       return 1
       ;;
     :)
-      echo "Option -$OPTARG requires an argument"
+      echo "Please add a commit message"
       return 1
       ;;
   esac

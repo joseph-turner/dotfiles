@@ -71,7 +71,7 @@ if $(git show-ref --verify --quiet "refs/heads/$default_branch"); then
       git conflicts
     else
       git rebase $default_branch
-      git conflicts
+      git conflicts -r
       [[ $push == '1' ]] && git up # need to pull first if we're going to push after rebase
     fi
 

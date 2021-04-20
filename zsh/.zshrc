@@ -45,7 +45,8 @@ done
 unset dirs_to_prepend
 
 export PATH
-fpath=( ~/bin "${fpath[@]}" )
+completions_dir="$(dirname $(readlink $HOME/.zshrc))/completions"
+fpath=($completions_dir ~/bin "${fpath[@]}" )
 
 export GIT_FRIENDLY_NO_BUNDLE=true
 # export GIT_FRIENDLY_NO_NPM=true
@@ -62,7 +63,7 @@ export GIT_FRIENDLY_NO_COMPOSER=true
 local sources=(
   "$HOME/.zshrc.local"
   "$HOME/.iterm2_shell_integration.zsh"
-  "$HOME/bin/node"
+  "$HOME/bin/lazy-load-node"
 )
 
 # This will grab all of the zsh files in the $DOTFILES_DIR/zsh folder

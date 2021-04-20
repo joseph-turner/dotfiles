@@ -1,0 +1,16 @@
+#!/usr/local/bin/zsh
+
+export NVM_DIR="$HOME/.nvm"
+declare -a NODE_GLOBALS=("node" "nvm" `find $NVM_DIR/versions/node -maxdepth 3 -type l -wholename '*/bin/*' | xargs -n1 basename | sort | uniq`)
+
+load_nvm() {
+  for cmd in "${NODE_GLOBALS[@]}"; do unset -f ${cmd} &>/dev/null; done
+  [[ -s $NVM_DIR/nvm.sh ]] && . "$NVM_DIR/nvm.sh"
+  nvm use 2>/dev/null 1>&2 || true
+}
+
+for cmd in "${NODE_GLOBALS[@]}"; do
+  if ! which ${cmd} &>/dev/null; then
+    eval "${cmd}() { unset -f ${cmd} &>/dev/null; load_nvm; ${cmd} \$@; }"
+  fi
+done

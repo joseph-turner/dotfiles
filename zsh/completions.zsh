@@ -4,6 +4,7 @@
 #                                 Completions
 # =============================================================================
 autoload colors; colors
+autoload compinit; compinit
 
 zstyle ':completion:*' rehash true
 zstyle ':completion:*' verbose yes
