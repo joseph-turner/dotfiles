@@ -29,7 +29,12 @@ while ! git_check; do
   echo
 done
 
-if [[ `git merge HEAD &> /dev/null` -ne 128 ]]; then
+if [[ $rebase = 1 && (`test -d "$(git rev-parse --git-path rebase-merge)"` || `test -d "$(git rev-parse --git-path rebase-apply)"`) ]]; then
+  git rebase --continue
+  return 0
+fi
+
+if [[ `git rev-parse -q --verify MERGE_HEAD` ]]; then
   git add -A
-  [[ $rebase = 1 ]] && git rebase --continue || git merge --continue
+  git merge --continue
 fi

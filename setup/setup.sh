@@ -182,6 +182,7 @@ symlink_files() {
     'git/.gitignore'
 
     'zsh/.zshrc'
+    'zsh/.p10k.zsh'
   )
 
   local i=''

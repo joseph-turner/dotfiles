@@ -1,16 +1,4 @@
 {
-  "beautify.config": {
-    "indent_size": 2,
-    "wrap_line_length": 0,
-    "html": {
-      "indent_size": 2,
-      "wrap_line_length": 0
-    },
-    "css": {
-      "indent_size": 2
-    }
-  },
-  "colorize.activate_variables_support_beta": true,
   "editor.fontFamily": "'Dank Mono', monospace",
   "editor.fontWeight": "300",
   "editor.multiCursorModifier": "ctrlCmd",
@@ -39,7 +27,6 @@
   "scss.lint.duplicateProperties": "warning",
   "scss.lint.idSelector": "ignore",
   "scss.lint.zeroUnits": "warning",
-  "scss.showErrors": true,
   "terminal.integrated.fontSize": 15,
   "workbench.iconTheme": "material-icon-theme",
   "gitlens.advanced.messages": {
@@ -49,8 +36,6 @@
     "suppressGitVersionWarning": false,
     "suppressLineUncommittedWarning": false,
     "suppressNoRepositoryWarning": false,
-    "suppressResultsExplorerNotice": false,
-    "suppressShowKeyBindingsNotice": true
   },
   "material-icon-theme.showWelcomeMessage": false,
   "[html]": {
@@ -73,10 +58,7 @@
     "breadcrumbs.enabled": true,
     "editor.renderControlCharacters": true,
     "workbench.startupEditor": "welcomePage",
-<<<<<<< Updated upstream
-=======
     "typescript.validate.enable": false,
->>>>>>> Stashed changes
     "editor.cursorBlinking": "phase",
     "editor.cursorSmoothCaretAnimation": true,
     "editor.cursorStyle": "line-thin",
@@ -85,13 +67,9 @@
     "oneDarkPro.bold": true,
     "oneDarkPro.vivid": true,
     "oneDarkPro.italic": true,
-<<<<<<< Updated upstream
     "workbench.colorTheme": "Night Owl",
-=======
-    "workbench.colorTheme": "Noctis Azureus",
->>>>>>> Stashed changes
     "terminal.external.osxExec": "iTerm.app",
-    "terminal.integrated.fontFamily": "\"Dank Mono\", \"FuraCode Nerd Font\"",
+    "terminal.integrated.fontFamily": "\"FuraCode Nerd Font\"",
     "diffEditor.ignoreTrimWhitespace": false,
     "todo-tree.tree.showScanModeButton": false,
     "eslint.alwaysShowStatus": true,
@@ -102,14 +80,6 @@
     "typescript.updateImportsOnFileMove.enabled": "always",
     "prettier.singleQuote": true,
     "emmet.triggerExpansionOnTab": true,
-    "vs-kubernetes": {
-      "vs-kubernetes.helm-path.mac": "/Users/jturner/.vs-kubernetes/tools/helm/darwin-amd64/helm",
-      "vs-kubernetes.kubectl-path.mac": "/Users/jturner/.vs-kubernetes/tools/kubectl/kubectl",
-      "vs-kubernetes.minikube-path.mac": "/Users/jturner/.vs-kubernetes/tools/minikube/darwin-amd64/minikube",
-      "vs-kubernetes.draft-path.mac": "/Users/jturner/.vs-kubernetes/tools/draft/darwin-amd64/draft"
-    },
-<<<<<<< Updated upstream
-    "tabnine.experimentalAutoImports": true,
     "todo-tree.general.tags": [
       "BUG",
       "HACK",
@@ -129,8 +99,7 @@
     ],
     "hungryDelete.keepOneSpace": true,
     "hungryDelete.considerIncreaseIndentPattern": true,
-    "hungryDelete.followAbovelineIndent": true
-=======
+    "hungryDelete.followAbovelineIndent": true,
     "spotify.showSignOutButton": false,
     "spotify.showSignInButton": false,
     "spotify.showVolumeUpButton": true,
@@ -140,6 +109,4 @@
     "typescript.referencesCodeLens.enabled": true,
     "typescript.suggest.completeFunctionCalls": true,
     "typescript.tsserver.enableTracing": true,
-    "tabnine.experimentalAutoImports": true
->>>>>>> Stashed changes
 }

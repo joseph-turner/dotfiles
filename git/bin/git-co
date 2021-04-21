@@ -53,7 +53,7 @@ while getopts ":B:b:lmr:" opt; do
 
       stash
       git checkout master
-      git up
+      git up || echo "\n$fg[yellow]Pull failed. Don't forget to rebase master$reset_color\n"
       git checkout -b $OPTARG
       ask_unstash
       return 0

@@ -29,12 +29,11 @@ local nvm=false
 
 echo "$fg[blue]Merging from $branch$reset_color\n"
 
-while ! git fetch --prune origin; do
+while ! git fetch --prune origin &>/dev/null; do
   echo "\n$fg[red]Error fetching latest $branch!$reset_color"
-  if read -q "?Press any key to continue to try again, \"N\" to abort."$'\n'; then
-    return 0
+  if ! read -qs "?Press \"Y\" to try again, or any other key to abort fetch."$'\n'; then
+    exit 1
   fi
-  exit 1
 done
 
 # check for yarn.lock and set dep
