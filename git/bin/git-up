@@ -23,7 +23,10 @@ done
 shift $((OPTIND -1))
 
 local branch=$(git for-each-ref --format='%(upstream:short)' "$(git symbolic-ref -q HEAD)")
-[[ -z $branch ]] && echo "Current branch (`git rev-parse --abbrev-ref HEAD`) has no upstream" && exit 1
+if [[ -z $branch ]]; then
+  echo "Current branch (`git rev-parse --abbrev-ref HEAD`) has no upstream"
+  exit 1
+fi
 local pkg=false
 local nvm=false
 
@@ -40,8 +43,8 @@ done
 # check for .nvmrc and set nvm
 if [[ $check = 0 ]]; then
   local gdiff=`git diff --name-only "$branch"`
-  [[ $(grep "yarn.lock" <<< $gdiff) ]] && dep=true
-  [[ $(grep ".nvmrc" <<< $gdiff) ]] && nvm=true
+  [[ $(grep "yarn.lock" <<< $gdiff) ]] && dep=true || :
+  [[ $(grep ".nvmrc" <<< $gdiff) ]] && nvm=true || :
 fi
 
 if git conditional-stash; then
@@ -50,9 +53,7 @@ fi
 
 git merge "$branch" || git conflicts
 
-if [[ $stashed == '1' ]]; then
-  git stash pop
-fi
+[[ $stashed == '1' ]] && git stash pop || :
 
 function update_dep() {
   echo
@@ -70,5 +71,5 @@ function update_node() {
   nvm use
 }
 
-[[ $dep = true ]] && update_dep
-[[ $nvm = true ]] && update_node
+[[ $dep = true ]] && update_dep || :
+[[ $nvm = true ]] && update_node || :
