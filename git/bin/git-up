@@ -43,8 +43,8 @@ done
 # check for .nvmrc and set nvm
 if [[ $check = 0 ]]; then
   local gdiff=`git diff --name-only "$branch"`
-  [[ $(grep "yarn.lock" <<< $gdiff) ]] && dep=true || :
-  [[ $(grep ".nvmrc" <<< $gdiff) ]] && nvm=true || :
+  [[ $(grep "yarn.lock" <<< $gdiff) ]] && dep=true
+  [[ $(grep ".nvmrc" <<< $gdiff) ]] && nvm=true
 fi
 
 if git conditional-stash; then
@@ -53,7 +53,7 @@ fi
 
 git merge "$branch" || git conflicts
 
-[[ $stashed == '1' ]] && git stash pop || :
+[[ $stashed == '1' ]] && git stash pop
 
 function update_dep() {
   echo
@@ -71,5 +71,7 @@ function update_node() {
   nvm use
 }
 
-[[ $dep = true ]] && update_dep || :
-[[ $nvm = true ]] && update_node || :
+[[ $dep = true ]] && update_dep
+[[ $nvm = true ]] && update_node
+
+true

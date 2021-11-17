@@ -13,8 +13,10 @@ autoload colors; colors
 export LANG="en_US.UTF-8"
 export LC_ALL="$LANG"
 
-export NVM_DIR="$HOME/.nvm"
-export NVM_DEFAULT="lts/*"
+export NVM_LAZY_LOAD=true
+export NVM_LAZY_LOAD_EXTRA_COMMANDS=('git')
+export NVM_COMPLETION=true
+export NVM_AUTO_USE=true
 
 # PATH
 # Directories to be prepended to $PATH
@@ -70,7 +72,6 @@ export GIT_FRIENDLY_NO_COMPOSER=true
 local sources=(
   "$HOME/.zshrc.local"
   "$HOME/.iterm2_shell_integration.zsh"
-  "$HOME/bin/lazy-load-node"
 )
 
 # This will grab all of the zsh files in the $DOTFILES_DIR/zsh folder
