@@ -50,7 +50,9 @@ fi
 
 git merge "$branch" || git conflicts
 
-[[ $stashed == '1' ]] && g stash pop
+if [[ $stashed == '1' ]]; then
+  git stash pop
+fi
 
 function update_dep() {
   echo
