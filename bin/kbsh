@@ -1,0 +1,10 @@
+#!/bin/zsh
+
+local current_branch=`git branch --show-current`
+local branch_pod=`kubectl get pods | awk -v var=$current_branch '$0 ~ var {print $1}'`
+
+if [[ -n $branch_pod ]]; then
+    kubectl exec --stdin --tty $branch_pod -- /bin/bash
+else
+    echo "No pod found for $current_branch"
+fi

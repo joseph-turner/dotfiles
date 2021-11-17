@@ -1,4 +1,4 @@
-#!/usr/local/bin/zsh
+#!/bin/zsh
 
 export NVM_DIR="$HOME/.nvm"
 declare -a NODE_GLOBALS=("node" "nvm" `find $NVM_DIR/versions/node -maxdepth 3 -type l -wholename '*/bin/*' | xargs -n1 basename | sort | uniq`)
