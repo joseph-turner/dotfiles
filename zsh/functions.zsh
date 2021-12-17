@@ -129,6 +129,8 @@ function reload() {
   fi
 }
 
-y() {
-  yarn $@ || nvm use && yarn $@
+nu() {
+  if [[ -f .nvmrc ]]; then
+    nvm current | grep -qv $(cat .nvmrc) && nvm use $@ || return 0
+  fi
 }

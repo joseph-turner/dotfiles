@@ -61,8 +61,8 @@
   clix    = clean -fdix
   rh      = reset --hard
   rs      = reset --soft
-  mundo   = reset HEAD~1 --mixed # resets the previous commit, but keeps all the changes from that commit
-  undo    = "!f() { git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}}; }; f" # undo from here http: //megakemp.com/2016/08/25/git-undo/
+  undo   = reset HEAD~1 --mixed # resets the previous commit, but keeps all the changes from that commit
+  hundo    = "!f() { git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}}; }; f" # undo from here http: //megakemp.com/2016/08/25/git-undo/
 
   # Stashes
   sa  = stash apply
@@ -96,7 +96,7 @@
   untracked = cyan
 
 [core]
-  editor       = code-insiders --wait
+  editor       = code --wait
   excludesfile = ~/.gitignore
   fscache      = true
   ignore       = dirty
@@ -107,27 +107,18 @@
 
 [diff]
   tool = vscode
-  tool = p4mergetool
-
-[difftool "p4mergetool"]
-  cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge "$LOCAL" "$REMOTE"
 
 [difftool "vscode"]
-  cmd = code-insiders --wait --diff $LOCAL $REMOTE
+  cmd = code --wait --diff $LOCAL $REMOTE
 
 [help]
   autocorrect = 1
 
 [merge]
   tool = vscode
-  tool = p4mergetool
-
-[mergetool "p4mergetool"]
-  cmd           = /Applications/p4merge.app/Contents/Resources/launchp4merge "$PWD/$BASE" "$PWD/$LOCAL" "$PWD/$REMOTE" "$PWD/$MERGED"
-  trustExitCode = false
 
 [mergetool "vscode"]
-  cmd = code-insiders --wait $MERGED
+  cmd = code --wait $MERGED
 
 [mergetool]
   keepBackup = false

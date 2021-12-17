@@ -27,14 +27,15 @@ alias lsl='ls -l'
 alias lsal='ls -al'
 
 alias firefox="/Applications/Firefox.app/Contents/MacOS/firefox"
-alias code="code-insiders"
+! type code &> /dev/null && type code-insiders &> /dev/null && alias code="code-insiders"
 alias c.="code ."
 alias ci="code"
 alias ci.="c."
 
 alias config="code $(dirname ${0:a:h})"
 
-alias nu="nvm use"
+# alias nu="nvm use"
+alias y="yarn"
 alias yd="y dev"
 alias ydi="y dev:inspect"
 alias yf="y flow"

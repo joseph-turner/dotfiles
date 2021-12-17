@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Installs Homebrew and some of the common dependencies needed/desired for software development
 

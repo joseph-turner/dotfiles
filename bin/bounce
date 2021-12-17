@@ -23,7 +23,7 @@ inst() {
   echo
   echo "Installing modules..."
   echo
-  y
+  yarn
 }
 
 reinst() {
@@ -33,7 +33,7 @@ reinst() {
   echo
   echo "Reinstalling modules..."
   echo
-  y
+  yarn
 }
 
 while getopts "fhs" opt; do
@@ -81,4 +81,4 @@ else
     reinst
 fi
 
-[[ $start == "1" ]] && y start
+[[ $start == "1" ]] && yarn dev

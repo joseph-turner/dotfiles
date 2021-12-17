@@ -14,7 +14,7 @@ export LANG="en_US.UTF-8"
 export LC_ALL="$LANG"
 
 export NVM_LAZY_LOAD=true
-export NVM_LAZY_LOAD_EXTRA_COMMANDS=('git')
+export NVM_LAZY_LOAD_EXTRA_COMMANDS=('git' 'y' 'g')
 export NVM_COMPLETION=true
 export NVM_AUTO_USE=true
 
@@ -37,8 +37,6 @@ dirs_to_prepend=(
   "$BREW_DIR"
   "$HOME/bin"
   "$HOME/bin/git"
-  # "$(brew --prefix coreutils)/libexec/gnubin" # Add brew-installed GNU core utilities bin
-  # "$(brew --prefix)/share/npm/bin" # Add npm-installed package bin
 )
 
 # Explicitly configured $PATH
