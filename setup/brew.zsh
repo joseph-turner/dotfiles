@@ -30,7 +30,7 @@ brew upgrade
 formulae=(
   fzy
   git
-  git-flow
+  # git-flow
   htop
   nvm
   python # for pip

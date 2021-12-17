@@ -87,11 +87,6 @@ echo "done"
 symlink_files() {
 
   declare -a FILES_TO_SYMLINK=(
-
-    'editor/.editorconfig'
-    'editor/.eslintrc'
-
-  #   'git/.gitattributes'
     'git/.gitconfig'
     'git/.gitignore'
 
