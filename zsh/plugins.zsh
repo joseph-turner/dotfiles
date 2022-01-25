@@ -15,8 +15,9 @@ source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
+zinit load lukechilds/zsh-nvm
 zinit light romkatv/powerlevel10k
-zinit light lukechilds/zsh-nvm
+
 zinit wait lucid for \
   b4b4r07/enhancd \
   OMZP::brew \

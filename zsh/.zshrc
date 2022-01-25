@@ -14,7 +14,7 @@ export LANG="en_US.UTF-8"
 export LC_ALL="$LANG"
 
 export NVM_LAZY_LOAD=true
-export NVM_LAZY_LOAD_EXTRA_COMMANDS=('git' 'y' 'g')
+export NVM_LAZY_LOAD_EXTRA_COMMANDS=('git' 'yarn')
 export NVM_COMPLETION=true
 export NVM_AUTO_USE=true
 

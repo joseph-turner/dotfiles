@@ -1,7 +1,10 @@
 #!/bin/zsh
 
 local current_branch=`git branch --show-current`
-local branch_pod=`kubectl get pods | awk -v var=$current_branch '$0 ~ var {print $1}'`
+local current_project=`basename $(git rev-parse --show-toplevel)`
+local current_project_branch="$current_project-$current_branch"
+
+local branch_pod=`kubectl get pods | awk -v var=$current_project_branch '$0 ~ var {print $1}'`
 
 if [[ -n $branch_pod ]]; then
     kubectl exec --stdin --tty $branch_pod -- /bin/bash

@@ -30,6 +30,7 @@ while ! git_check; do
 done
 
 if [[ $rebase = 1 && (`test -d "$(git rev-parse --git-path rebase-merge)"` || `test -d "$(git rev-parse --git-path rebase-apply)"`) ]]; then
+  git add -A
   git rebase --continue
   return 0
 fi
