@@ -1,17 +1,17 @@
 #!/bin/zsh
 
 # Install Caskroom
-if ! type brew; then
+if ! type brew &> /dev/null; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 brew tap homebrew/cask
 brew tap homebrew/cask-fonts
-brew tap homebrew/versions
+# brew tap homebrew/versions # deprecated
 
 # Install packages
 casks=(
   # Installers and apps
-  adobe-creative-cloud
+  # adobe-creative-cloud
   betterzip # Note: The BetterZipQL plugin was integrated with the BetterZip app.
   docker
   figma
