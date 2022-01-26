@@ -7,7 +7,6 @@ brew tap homebrew/versions
 
 # Install packages
 casks=(
-
   # Installers and apps
   adobe-creative-cloud
   betterzip # Note: The BetterZipQL plugin was integrated with the BetterZip app.
