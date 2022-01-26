@@ -25,7 +25,6 @@ done
 if git add -A && git commit -m "${@: -1}"; then
   echo "$fg[green]\nCommit successful!$reset_color"
 else
-  # TODO: retry after nvm use
   echo "$fg[red]Commit failed$reset_color"
   push=0
 fi

@@ -13,10 +13,16 @@ autoload colors; colors
 export LANG="en_US.UTF-8"
 export LC_ALL="$LANG"
 
+# lukechilds/zsh-nvm
 export NVM_LAZY_LOAD=true
 export NVM_LAZY_LOAD_EXTRA_COMMANDS=('git' 'yarn')
 export NVM_COMPLETION=true
 export NVM_AUTO_USE=true
+
+# OMZP::nvm
+# export NVM_AUTOLOAD=1
+# export NVM_LAZY=1
+# export NVM_LAZY_CMD=('git')
 
 # PATH
 # Directories to be prepended to $PATH
@@ -24,7 +30,7 @@ export NVM_AUTO_USE=true
 
 ZSH_SOURCES_DIR=$(dirname $(readlink $HOME/.zshrc))
 
-local BREW_DIR="/usr/local"
+local BREW_DIR="/opt/homebrew/bin"
 if [[ ! -d $BREW_DIR ]]; then
   echo "\n$fg[red]Brew directory has changed!$reset_color"
   echo "$fg[blue]Update in $ZSH_SOURCES_DIR/.zshrc\n$reset_color"
@@ -98,7 +104,7 @@ export LESS="-FiJMRWX -x4 -z-4 --tabs=4 --no-init --LONG-PROMPT --ignore-case --
 
 # Watching other users
 #WATCHFMT="%n %a %l from %m at %t."
-watch=(notme)         # Report login/logout events for everybody except ourself.
+watch=(notme)         # Report login/logout events for everybody except yourself.
 LOGCHECK=60           # Time (seconds) between checks for login/logout activity.
 REPORTTIME=5          # Display usage statistics for commands running > 5 sec.
 WORDCHARS="\"*?_-[]~&;!#$%^(){}<>\""
@@ -127,7 +133,6 @@ setopt promptsubst
 
 setopt extended_glob
 
-# TODO: add custom completions leveraging _git
 compdef _g git
 compdef _gatsby gatsby
 

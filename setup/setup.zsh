@@ -121,6 +121,7 @@ symlink_files() {
 symlink_binaries() {
 
   # Copy binaries
+  ln -fs $DOTFILES_DIR/git/bin $DOTFILES_DIR/bin/git
   ln -fs $DOTFILES_DIR/bin $HOME
 
   declare -a BINARIES=(
@@ -143,11 +144,20 @@ symlink_binaries() {
 symlink_files
 symlink_binaries
 
+ask_for_confirmation "Run MacOS Script?"
+if answer_is_yes; then
+  chmod +rwx $SCRIPT_DIR/macos.zsh
+  $SCRIPT_DIR/macos.zsh
+fi
+
 # Package managers & packages
 ask_for_confirmation "Run Homebrew Script?"
 if answer_is_yes; then
   chmod +rwx $SCRIPT_DIR/brew.zsh
   $SCRIPT_DIR/brew.zsh
+
+  # iterm2 shell integration
+  curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh
 fi
 
 ask_for_confirmation "Run Homebrew Cask Script?"

@@ -32,11 +32,3 @@ zinit wait lucid for \
     zdharma-continuum/fast-syntax-highlighting \
     zsh-users/zsh-completions \
     zsh-users/zsh-autosuggestions \
-
-# zplug "plugins/git",        from:oh-my-zsh, if:"which git"
-# zplug "plugins/gitfast",    from:oh-my-zsh, if:"which git"
-# zplug "plugins/gitignore",  from:oh-my-zsh, if:"which git"
-# zplug "plugins/git-extras", from:oh-my-zsh, if:"which git"
-# zplug "plugins/git-flow",   from:oh-my-zsh, if:"which gitflow"
-
-# zplug "plugins/ng",         from:oh-my-zsh, if:"which ng"
