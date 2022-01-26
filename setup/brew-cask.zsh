@@ -1,6 +1,9 @@
 #!/bin/zsh
 
 # Install Caskroom
+if ! type brew; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 brew tap homebrew/cask
 brew tap homebrew/cask-fonts
 brew tap homebrew/versions
