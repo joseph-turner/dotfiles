@@ -27,7 +27,7 @@ casks=(
   # plex-media-server
   pomello
   rocket # Emoji picker (https://matthewpalmer.net/rocket/)
-  slack
+  # slack
   spotify
   suspicious-package # Preview the contents of a standard Apple installer package
   ubersicht
