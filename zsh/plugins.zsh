@@ -1,15 +1,16 @@
 # =============================================================================
 #                                   Plugins
 # =============================================================================
+autoload colors; colors
 
 # Check if zinit is installed
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-if [[ ! -f $ZINIT_HOME ]]; then
-    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
+if [[ ! -d $ZINIT_HOME ]]; then
+    print -P "$fg[blue]▓▒░ $fg[yellow]Installing $fg[blue]DHARMA $fg[yellow]Initiative Plugin Manager ($fg[blue]zdharma-continuum/zinit$fg[yellow])…$reset_color"
     command mkdir -p "$(dirname $ZINIT_HOME)"
     command git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME" && \
-        print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
-        print -P "%F{160}▓▒░ The clone has failed.%f%b"
+        print -P "$fg[blue]▓▒░ $fg[green]Installation successful.$reset_color" || \
+        print -P "$fg[red]▓▒░ The clone has failed.$reset_color"
 fi
 
 source "${ZINIT_HOME}/zinit.zsh"
@@ -39,7 +40,3 @@ zinit wait lucid for \
 # zplug "plugins/git-flow",   from:oh-my-zsh, if:"which gitflow"
 
 # zplug "plugins/ng",         from:oh-my-zsh, if:"which ng"
-
-# =============================================================================
-#                              Plugin Settings
-# =============================================================================
