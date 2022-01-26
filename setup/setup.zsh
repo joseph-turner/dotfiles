@@ -1,5 +1,5 @@
-#!/bin/env zsh
-
+#!/bin/zsh
+autoload colors; colors
 # https://github.com/kaicataldo/dotfiles/blob/master/bin/install.sh
 
 # This symlinks all the dotfiles (and .atom/) to ~/
@@ -19,8 +19,7 @@ answer_is_yes() {
 }
 
 ask_for_confirmation() {
-  print_question "$1 (y/n) "
-  read -n 1
+  read -qs "?$(print_question "$1 (y/n) ")"
   printf "\n"
 }
 
@@ -36,7 +35,7 @@ print_error() {
 
 print_question() {
   # Print output in yellow
-  printf "\e[0;33m  [?] $1\e[0m"
+  printf "$fg[yellow][?] $1$reset_color"
 }
 
 print_result() {
@@ -55,7 +54,8 @@ print_success() {
 
 # Warn user this script will overwrite current dotfiles
 while true; do
-  read -n1 -p "Warning: this will overwrite your current dotfiles. Continue? [y/n]" yn
+  echo $fg[red]WARNING: this will overwrite your current dotfiles.$reset_color
+  read -qs "?Continue? [y/n]" yn
   case $yn in
     [Yy]* ) break;;
     [Nn]* ) exit;;
@@ -64,12 +64,14 @@ while true; do
 done
 
 # Get the dotfiles directory's absolute path
-SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd -P)"
+SCRIPT_DIR="${0:a:h}"
 DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
 # Get current dir (to return to it later)
 CURRENT_DIR="$(pwd)"
 
-dir_backup=~/dotfiles_old             # old dotfiles backup directory
+echo $SCRIPT_DIR
+echo $DOTFILES_DIR
+echo $CURRENT_DIR
 
 export DOTFILES_DIR
 
@@ -128,6 +130,10 @@ symlink_binaries() {
   ln -fs $DOTFILES_DIR/bin $HOME
 
   declare -a BINARIES=(
+    'bounce'
+    'kbsh'
+    'kbt'
+    'setperm'
     'ssh-key'
   )
 
@@ -137,56 +143,6 @@ symlink_binaries() {
   done
 
   unset BINARIES
-
-  declare -a INSTALL_SCRIPTS=(
-    'install/brew-cask.sh'
-    'install/brew.sh'
-    'install/node.sh'
-
-    'setup/macos.sh'
-  )
-
-  for i in ${INSTALL_SCRIPTS[@]}; do
-    echo "Changing access permissions for install scripts :: $i"
-    chmod +rwx $DOTFILES_DIR/$i
-  done
-
-}
-
-symlink_editor_settings() {
-  # Atom editor settings
-  if [[ -d ~/.atom ]]; then
-    echo -n "Copying Atom settings.."
-    mv -f ~/.atom ~/dotfiles_old/
-    ln -s $HOME/dotfiles/atom ~/.atom
-    echo "done"
-  fi
-
-  # Visual Studio Code - Insiders
-  vsci_user_dir="$HOME/Library/Application Support/Code - Insiders/User"
-  # cd "$vsci_user_dir"
-  if [[ -d "$vsci_user_dir" ]]; then
-    echo "VS Code - Insiders: Backing up default user settings"
-    [[ -d  "$vsci_user_dir/backups" ]] || mkdir -p "$vsci_user_dir/backups"
-
-    declare -a editor_files=(
-      "snippets"
-      "keybindings.json"
-      "settings.json"
-    )
-
-    for i in ${editor_files[@]}; do
-      mv -f "$vsci_user_dir/$i" "$vsci_user_dir/backups"
-      echo "Linking VS Code - Insiders settings"
-      ln -s "$DOTFILES_DIR/editor/vscode/$i" "$vsci_user_dir/$i"
-    done
-  fi
-}
-
-install_wakatime() {
-  if [ ! "$(which wakatime)" ]; then
-    pip3 install wakatime
-  fi
 }
 
 # Symlink files and binaries
@@ -194,21 +150,27 @@ symlink_files
 symlink_binaries
 
 # Package managers & packages
-"$DOTFILES_DIR/setup/brew.zsh"
-"$DOTFILES_DIR/setup/brew-cask.zsh"
-"$DOTFILES_DIR/setup/node.zsh"
+ask_for_confirmation "Run Homebrew Script?"
+if answer_is_yes; then
+  chmod +rwx $SCRIPT_DIR/brew.zsh
+  $SCRIPT_DIR/brew.zsh
+fi
 
-symlink_editor_settings
+ask_for_confirmation "Run Homebrew Cask Script?"
+if answer_is_yes; then
+  chmod +rwx $SCRIPT_DIR/brew-cask.zsh
+  $SCRIPT_DIR/brew-cask.zsh
+fi
 
-install_wakatime
+ask_for_confirmation "Run Node Script?"
+if answer_is_yes; then
+  chmod +rwx $SCRIPT_DIR/node.zsh
+  $SCRIPT_DIR/node.zsh
+fi
 
 cd "$CURRENT_DIR"
 unset CURRENT_DIR
 
-echo "Sourcing ~/.zshrc"
-# Change to zsh to source .zshrc
-exec zsh
-# Reload zsh settings
-source ~/.zshrc
+reset && exec zsh
 
 exit
