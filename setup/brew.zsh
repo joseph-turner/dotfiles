@@ -6,9 +6,9 @@
 # sudo -v
 
 # Check for Homebrew and install it if missing
-if ! type brew; then
+if ! type brew &> /dev/null; then
   echo "Installing Homebrew..."
-  ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 fi
 
 # Make sure we’re using the latest Homebrew
