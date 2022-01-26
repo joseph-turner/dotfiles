@@ -28,7 +28,7 @@ zinit wait lucid for \
   OMZP::sudo \
   zsh-users/zsh-history-substring-search \
   atinit"zicompinit; zicdreplay" \
-    zdharma/fast-syntax-highlighting \
+    zdharma-continuum/fast-syntax-highlighting \
     zsh-users/zsh-completions \
     zsh-users/zsh-autosuggestions \
 
