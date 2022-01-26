@@ -25,9 +25,9 @@ export NVM_AUTO_USE=true
 ZSH_SOURCES_DIR=$(dirname $(readlink $HOME/.zshrc))
 
 local BREW_DIR="/usr/local"
-if [[ ! -d "/usr/local" ]]; then
-  echo "\n$fg[red]Brew directory has changed!"
-  echo "Update in $ZSH_SOURCES_DIR/.zshrc\n"
+if [[ ! -d $BREW_DIR ]]; then
+  echo "\n$fg[red]Brew directory has changed!$reset_color"
+  echo "$fg[blue]Update in $ZSH_SOURCES_DIR/.zshrc\n$reset_color"
 fi
 
 local -a dirs_to_prepend
