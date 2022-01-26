@@ -94,10 +94,6 @@ symlink_files() {
     'zsh/.p10k.zsh'
   )
 
-  local i=''
-  local sourceFile=''
-  local targetFile=''
-
   for i in ${FILES_TO_SYMLINK[@]}; do
 
     sourceFile="$DOTFILES_DIR/$i"
@@ -105,7 +101,7 @@ symlink_files() {
 
     if [[ ! -e $targetFile ]]; then
       ln -fs $sourceFile $targetFile
-    elif [ "$(readlink "$targetFile")" == "$sourceFile" ]; then
+    elif [[ $(readlink "$targetFile") == $sourceFile ]]; then
       print_success "$targetFile → $sourceFile"
     else
       ask_for_confirmation "'$targetFile' already exists, do you want to overwrite it?"
