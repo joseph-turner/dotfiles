@@ -1,5 +1,4 @@
 #!/bin/zsh
-autoload colors; colors
 # https://github.com/kaicataldo/dotfiles/blob/master/bin/install.sh
 
 # This symlinks all the dotfiles (and .atom/) to ~/
@@ -35,7 +34,7 @@ print_error() {
 
 print_question() {
   # Print output in yellow
-  printf "$fg[yellow][?] $1$reset_color"
+  printf "\e[0;33m  [?] $1\e[0m"
 }
 
 print_result() {
@@ -59,7 +58,7 @@ while true; do
   case $yn in
     [Yy]* ) break;;
     [Nn]* ) exit;;
-    * ) echo "Please answer yes or no.";;
+    * ) echo "\nPlease answer yes or no.";;
   esac
 done
 
@@ -76,8 +75,7 @@ echo $CURRENT_DIR
 export DOTFILES_DIR
 
 # Change to the dotfiles directory
-echo -n "
-Changing to the $DOTFILES_DIR directory..."
+echo -n "\nChanging to the $DOTFILES_DIR directory..."
 cd $DOTFILES_DIR
 echo "done"
 
