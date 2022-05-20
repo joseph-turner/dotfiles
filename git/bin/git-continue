@@ -1,0 +1,22 @@
+#!/bin/zsh
+
+autoload colors; colors
+
+local cmd
+
+if [[ -d `git rev-parse --git-path rebase-merge` || -d `git rev-parse --git-path rebase-apply` ]]; then
+    # in a rebase
+    cmd=rebase
+fi
+
+if [[ -f `git rev-parse --git-path MERGE_HEAD` ]]; then
+    # merge in progress
+    cmd=merge
+fi
+
+if [[ -n $cmd ]]; then
+    git add -A
+    git $cmd --continue
+else
+    echo "No merge or rebase in progress."
+fi

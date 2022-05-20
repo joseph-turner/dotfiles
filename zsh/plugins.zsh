@@ -17,7 +17,7 @@ source "${ZINIT_HOME}/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
-zinit load lukechilds/zsh-nvm
+# zinit load lukechilds/zsh-nvm
 zinit light romkatv/powerlevel10k
 
 zinit wait lucid for \
@@ -26,6 +26,7 @@ zinit wait lucid for \
   OMZP::colored-man-pages \
   OMZP::node \
   OMZP::npm \
+  OMZP::nvm \
   OMZP::sudo \
   zsh-users/zsh-history-substring-search \
   atinit"zicompinit; zicdreplay" \

@@ -6,7 +6,7 @@ autoload colors; colors
 if [[ ! -z $(git diff --stat) ]]; then
   echo "$fg[yellow]Uncommitted changes found.$reset_color"
   echo "Stashing..."
-  git stash
+  git stash -u
   echo
   exit 0
 fi

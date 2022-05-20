@@ -43,6 +43,7 @@ unstash() {
 
 local default_branch=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
 
+# TODO: break out functions
 while getopts ":B:b:lmr:" opt; do
   case ${opt} in
     B) # Checkout new branch based on latest master

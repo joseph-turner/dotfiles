@@ -41,6 +41,7 @@
 
   # Merges
   abort   = "!$(git merge --abort &>/dev/null) || $(git rebase --abort &>/dev/null) || echo \"Not merging or rebasing\""
+  cont    = continue
   ma      = merge --abort
   mc      = !git a && git merge --continue
   mcp     = !git mc && printf '\nPushing changes\n' && git pu
@@ -70,7 +71,7 @@
   sd  = stash drop
   sl  = stash list
   sp  = stash pop
-  ss  = stash save -u
+  ss  = stash -u
 
   # Status
   st  = status -sb --ignore-submodules
@@ -122,6 +123,9 @@
 
 [mergetool]
   keepBackup = false
+
+[pull]
+  rebase = true
 
 # This is Git's per-user configuration file.
 [user]

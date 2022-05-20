@@ -33,6 +33,7 @@ formulae=(
   git
   # git-flow
   htop
+  kubectl
   nvm
   python # for pip
   speedtest_cli

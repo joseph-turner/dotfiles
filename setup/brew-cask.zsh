@@ -26,6 +26,7 @@ casks=(
   # plex-media-player
   # plex-media-server
   pomello
+  postman
   rocket # Emoji picker (https://matthewpalmer.net/rocket/)
   # slack
   spotify

@@ -30,6 +30,8 @@ fi
 local pkg=false
 local nvm=false
 
+git check-connection
+
 echo "$fg[blue]Merging from $branch$reset_color\n"
 
 while ! git fetch --prune origin &>/dev/null; do

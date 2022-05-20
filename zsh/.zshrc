@@ -14,15 +14,17 @@ export LANG="en_US.UTF-8"
 export LC_ALL="$LANG"
 
 # lukechilds/zsh-nvm
-export NVM_LAZY_LOAD=true
-export NVM_LAZY_LOAD_EXTRA_COMMANDS=('git' 'yarn')
-export NVM_COMPLETION=true
-export NVM_AUTO_USE=true
+# export NVM_LAZY_LOAD=true
+# export NVM_LAZY_LOAD_EXTRA_COMMANDS=('git')
+# export NVM_COMPLETION=true
+# export NVM_AUTO_USE=true
+# export NVM_BIN=
+# export NVM_INC=
 
 # OMZP::nvm
-# export NVM_AUTOLOAD=1
+export NVM_AUTOLOAD=1
 # export NVM_LAZY=1
-# export NVM_LAZY_CMD=('git')
+export NVM_LAZY_CMD=('git')
 
 # PATH
 # Directories to be prepended to $PATH

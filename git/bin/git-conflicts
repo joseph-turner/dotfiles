@@ -29,13 +29,16 @@ while ! git_check; do
   echo
 done
 
-if [[ $rebase = 1 && (`test -d "$(git rev-parse --git-path rebase-merge)"` || `test -d "$(git rev-parse --git-path rebase-apply)"`) ]]; then
-  git add -A
-  git rebase --continue
-  return 0
-fi
+# TODO: loop through each step for interactive rebases
+git continue
 
-if [[ `git rev-parse -q --verify MERGE_HEAD` ]]; then
-  git add -A
-  git merge --continue
-fi
+# if [[ $rebase = 1 && (`test -d "$(git rev-parse --git-path rebase-merge)"` || `test -d "$(git rev-parse --git-path rebase-apply)"`) ]]; then
+#   git add -A
+#   git rebase --continue
+#   return 0
+# fi
+
+# if [[ `git rev-parse -q --verify MERGE_HEAD` ]]; then
+#   git add -A
+#   git merge --continue
+# fi

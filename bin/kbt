@@ -2,7 +2,7 @@
 
 local current_branch=`git branch --show-current`
 local current_project=`basename $(git rev-parse --show-toplevel)`
-local current_project_branch="$current_project-$current_branch"
+local current_project_branch="$current_project-${current_branch:l}"
 
 local branch_pod=`kubectl get pods | awk -v var=$current_project_branch '$0 ~ var {print $1}'`
 
