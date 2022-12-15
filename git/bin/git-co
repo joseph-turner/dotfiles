@@ -41,23 +41,32 @@ unstash() {
   [[ $stashed == 1 ]] && echo && git stash pop
 }
 
-local default_branch=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')
+local default_branch=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p') || 'master'
 
 # TODO: break out functions
 while getopts ":B:b:lmr:" opt; do
   case ${opt} in
     B) # Checkout new branch based on latest master
-      if exists $OPTARG; then
+      local today=`date +%b%-d`
+      if [[ $OPTARG =~ "${today:l}-jt-" ]]; then
+        branch=$OPTARG
+      else
+        branch=${today:l}-jt-$OPTARG
+      fi
+      if exists $branch; then
+        echo "Branch $branch already exists."
         stash
-        git checkout $OPTARG && ask_merge_master $OPTARG && git merge-master
+        git checkout $branch && ask_merge_master $branch && git merge-master
         git check-stash
         return 0
       fi
 
+      echo $branch
       stash
       git checkout $default_branch
+      git check-connection
       git up || echo "\n$fg[yellow]Pull failed. Don't forget to rebase $default_branch$reset_color\n"
-      git checkout -b $OPTARG
+      git checkout -b $branch
       ask_unstash
       return 0
       ;;

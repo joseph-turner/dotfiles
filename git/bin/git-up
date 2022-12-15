@@ -28,7 +28,6 @@ if [[ -z $branch ]]; then
   exit 1
 fi
 local pkg=false
-local nvm=false
 
 git check-connection
 
@@ -42,11 +41,9 @@ while ! git fetch --prune origin &>/dev/null; do
 done
 
 # check for yarn.lock and set dep
-# check for .nvmrc and set nvm
 if [[ $check = 0 ]]; then
   local gdiff=`git diff --name-only "$branch"`
   [[ $(grep "yarn.lock" <<< $gdiff) ]] && dep=true
-  [[ $(grep ".nvmrc" <<< $gdiff) ]] && nvm=true
 fi
 
 if git conditional-stash; then
@@ -64,16 +61,6 @@ function update_dep() {
   bounce
 }
 
-function update_node() {
-  echo
-  echo "Change detected in .nvmrc"
-  echo
-  export NVM_DIR=~/.nvm
-  [[ -s $NVM_DIR/nvm.sh ]] && . "$NVM_DIR/nvm.sh"
-  nvm use
-}
-
 [[ $dep = true ]] && update_dep
-[[ $nvm = true ]] && update_node
 
 true

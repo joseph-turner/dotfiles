@@ -1,4 +1,5 @@
 #!/bin/zsh
+autoload colors; colors
 
 # =============================================================================
 #                                   Functions
@@ -24,7 +25,13 @@ function o() {
 
 function check_internet() {
   # ping google
-  [[ ping -c1 8.8.8.8 ]] && return 0 || return 2
+  if [[ `ping -c1 8.8.8.8` ]]; then
+    echo "$fg[green]You are connected.$reset_color"
+    return 0
+  else
+    echo "$fg[red]Error connecting to the internet!\n$reset_color What century is this!?";
+    return 2
+  fi
 }
 
 # Compare original and gzipped file size
@@ -38,10 +45,10 @@ function gz() {
 
 function update() {
   echo "Updating and cleaning up homebrew stuff"
-  brew update && brew upgrade && brew cleanup
+  brew update && brew outdated && brew upgrade && brew cleanup
 
   echo "Installing latest LTS version of Node"
-  nvm install --lts && nvm use
+  asdf install --lts && asdf current
 }
 
 function chrome() {
@@ -129,8 +136,13 @@ function reload() {
   fi
 }
 
-nu() {
-  if [[ -f .nvmrc ]]; then
-    nvm current | grep -qv $(cat .nvmrc) && nvm use $@ || return 0
+autoload -U add-zsh-hook
+load-asdf-nodejs() {
+  if [[ ! $(node -v &> /dev/null) ]]; then
+    if [[ -f "./.nvmrc" || -f "./.tool-versions" ]]; then
+      asdf install &> /dev/null
+    fi
   fi
 }
+add-zsh-hook chpwd load-asdf-nodejs
+load-asdf-nodejs

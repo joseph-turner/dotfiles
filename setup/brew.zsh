@@ -20,21 +20,17 @@ brew upgrade
 
 # Install the Homebrew packages I use on a day-to-day basis.
 #
-# - Languages: nvm (Node.js)
 # - Tree (http://mama.indstate.edu/users/ice/tree/): A directory listing utility
 #   that produces a depth indented listing of files.
 # - git-extras (https://vimeo.com/45506445): Adds a shit ton of useful commands #   to git.
-# Note that I install nvm (https://github.com/creationix/nvm) instead
-# of installing Node directly. This gives me more explicit control over
-# which version I'm using.
 
 formulae=(
+  asdf
   fzy
   git
   # git-flow
   htop
   kubectl
-  nvm
   python # for pip
   speedtest_cli
   tmux

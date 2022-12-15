@@ -26,20 +26,10 @@ shift $((OPTIND-1))
 # Default branch is master
 local stashed
 # local dep=false
-local nvm=false
 local push=${push-0}
 local rebase=${rebase-0} # Default to merge instead of rebase
 local default_branch="${1:-master}"
 local working_branch=$(git branch | grep \* | cut -d ' ' -f2)
-
-function update_node() {
-  echo
-  echo "Change detected in .nvmrc"
-  echo
-  export NVM_DIR=~/.nvm
-  [[ -s $NVM_DIR/nvm.sh ]] && . "$NVM_DIR/nvm.sh"
-  nvm use
-}
 
 # if already on the default branch (master)
 if [[ "$working_branch" == "$default_branch" ]]; then
@@ -62,9 +52,6 @@ if $(git show-ref --verify --quiet "refs/heads/$default_branch"); then
     git checkout "$working_branch"
     echo
 
-    local gdiff=`git diff --name-only "$default_branch"`
-    [[ $(grep ".nvmrc" <<< $gdiff) ]] && nvm=true
-
     # if rebase flag is on it will rebase
     if [[ $rebase == '0' ]]; then
       git merge --no-edit $default_branch
@@ -77,7 +64,6 @@ if $(git show-ref --verify --quiet "refs/heads/$default_branch"); then
 
     bounce
 
-    [[ $nvm == true ]] && update_node
     [[ $push == '1' ]] && git pu
 
     # If shashed, pop out changes

@@ -7,7 +7,7 @@ local remote_url=$(git remote get-url origin | cut -d'/' -f3)
 
 ping_remote() {
   echo "$fg[cyan]Checking connection to repo$reset_color"
-  ping -c1 -t2 $remote_url 2>&1 >/dev/null
+  ping -c1 -t2 $remote_url 2>&1 >/dev/null && echo "$fg[green]Connection successful$reset_color"
 }
 
 while ! ping_remote; do

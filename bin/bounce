@@ -62,10 +62,6 @@ while getopts "fhs" opt; do
 done
 shift "$((OPTIND -1))"
 
-export NVM_DIR=~/.nvm
-[[ -s $NVM_DIR/nvm.sh ]] && . "$NVM_DIR/nvm.sh"
-nvm use
-
 if [[ ! -d "./node_modules" ]]; then
   echo "\nNode modules not installed"
   inst

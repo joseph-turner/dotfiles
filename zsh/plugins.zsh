@@ -17,19 +17,22 @@ source "${ZINIT_HOME}/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
-# zinit load lukechilds/zsh-nvm
 zinit light romkatv/powerlevel10k
 
 zinit wait lucid for \
   b4b4r07/enhancd \
+  OMZP::asdf \
   OMZP::brew \
   OMZP::colored-man-pages \
   OMZP::node \
   OMZP::npm \
-  OMZP::nvm \
   OMZP::sudo \
   zsh-users/zsh-history-substring-search \
   atinit"zicompinit; zicdreplay" \
     zdharma-continuum/fast-syntax-highlighting \
     zsh-users/zsh-completions \
     zsh-users/zsh-autosuggestions \
+
+if [[ ! $(asdf plugin list) =~ 'nodejs' ]]; then
+  asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+fi

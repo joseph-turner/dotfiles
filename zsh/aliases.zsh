@@ -34,7 +34,6 @@ alias ci.="c."
 
 alias config="code $(dirname ${0:a:h})"
 
-# alias nu="nvm use"
 alias y="yarn"
 alias yd="y dev"
 alias ydi="y dev:inspect"
@@ -44,8 +43,7 @@ alias ylj="y lint:js"
 alias ylc="y lint:css"
 alias ytf="yt && yf"
 alias ytw="y test:watch"
-alias yst="nvm use && y && y start"
-alias yst="y start"
+alias yst="y && y start"
 alias yt="y test"
 alias ytw="y test:watch"
 # yarn charles => yarn chuck => yuck

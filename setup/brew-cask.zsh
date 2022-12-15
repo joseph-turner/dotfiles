@@ -61,7 +61,6 @@ fonts=(
   # Patched by Nerd Font
   font-fira-code-nerd-font
   font-meslo-lg-nerd-font
-  font-roboto-mono-nerd-font
   font-sauce-code-pro-nerd-font
 )
 
