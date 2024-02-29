@@ -29,9 +29,12 @@ shift $((OPTIND -1))
 
 [[ $# -eq 0 ]] && echo "(g|git) rename requires 1 or 2 arguments" usage && exit 1
 
-git branch -m $@
-
 local new_branch old_branch
+local today=`date +%b%-d`
+new_branch="${today:l}-jt-$@"
+
+git branch -m $new_branch
+
 if [[ $# -eq 2 ]]; then
   old_branch=$1
   new_branch=$2

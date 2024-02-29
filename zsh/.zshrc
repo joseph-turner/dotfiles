@@ -29,6 +29,7 @@ local -a dirs_to_prepend
 dirs_to_prepend=(
   "/opt/local/bin"
   "/usr/local/sbin"
+  "/opt/homebrew/sbin"
   "$BREW_DIR"
   "$HOME/bin"
   "$HOME/bin/git"
@@ -89,6 +90,14 @@ done
 #                                   Options
 # =============================================================================
 
+# kubectl config settings
+KUBEDIR="$HOME/.kube"
+KUBECONFIG=""
+for kubeconfig_file in $KUBEDIR/*(.); do
+  KUBECONFIG+=:$kubeconfig_file
+done
+export KUBECONFIG
+
 # improved less option
 export LESS="-FiJMRWX -x4 -z-4 --tabs=4 --no-init --LONG-PROMPT --ignore-case --quit-if-one-screen --RAW-CONTROL-CHARS"
 
@@ -123,6 +132,7 @@ setopt promptsubst
 
 setopt extended_glob
 
+compdef _dev dev
 compdef _g git
 compdef _gatsby gatsby
 

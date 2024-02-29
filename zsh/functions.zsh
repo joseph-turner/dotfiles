@@ -146,3 +146,35 @@ load-asdf-nodejs() {
 }
 add-zsh-hook chpwd load-asdf-nodejs
 load-asdf-nodejs
+
+# changes directory to project directory and opens project in vs code
+dev() {
+  local dir_prefix
+  while getopts "o:p:" opt; do
+    case $opt in
+      o)
+        dir_prefix="$HOME/OSTK/SUI/"
+        ;;
+      p)
+        dir_prefix="$HOME/Personal/"
+        ;;
+      \?)
+        echo "Invalid option: -$OPTARG"
+        return 1
+        ;;
+      :)
+        echo "Option -$OPTARG requires an argument"
+        return 1
+        ;;
+    esac
+  done
+  shift "$((OPTIND-1))"
+
+  if [[ -n $OPTARG ]]; then
+      cd $dir_prefix$OPTARG || return 1
+  fi
+
+  code . || return 1
+
+  return 0
+}

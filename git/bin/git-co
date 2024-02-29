@@ -41,39 +41,48 @@ unstash() {
   [[ $stashed == 1 ]] && echo && git stash pop
 }
 
+create_branch_name() {
+  local today=`date +%b%-d`
+  if [[ $1 =~ "${today:l}-jt-" ]]; then
+    branch=$1
+  else
+    branch=${today:l}-jt-$1
+  fi
+  echo $branch
+}
+
 local default_branch=$(git remote show origin | sed -n '/HEAD branch/s/.*: //p') || 'master'
 
-# TODO: break out functions
+g_cmb() {
+  local branch=`create_branch_name $OPTARG`
+  if exists $branch; then
+    echo "Branch $branch already exists."
+    stash
+    git checkout $branch && ask_merge_master
+    git merge-master
+    git check-stash
+    return 0
+  fi
+
+  # echo $branch
+  stash
+  git checkout $default_branch
+  git up || echo "\n$fg[yellow]Pull failed. Don't forget to rebase $default_branch$reset_color\n"
+  git checkout -b $branch
+  ask_unstash
+  return 0
+}
+
 while getopts ":B:b:lmr:" opt; do
   case ${opt} in
-    B) # Checkout new branch based on latest master
-      local today=`date +%b%-d`
-      if [[ $OPTARG =~ "${today:l}-jt-" ]]; then
-        branch=$OPTARG
-      else
-        branch=${today:l}-jt-$OPTARG
-      fi
-      if exists $branch; then
-        echo "Branch $branch already exists."
-        stash
-        git checkout $branch && ask_merge_master $branch && git merge-master
-        git check-stash
-        return 0
-      fi
-
-      echo $branch
-      stash
-      git checkout $default_branch
-      git check-connection
-      git up || echo "\n$fg[yellow]Pull failed. Don't forget to rebase $default_branch$reset_color\n"
-      git checkout -b $branch
-      ask_unstash
-      return 0
+    B)
+      git check-connection && g_cmb $OPTARG# Checkout new branch based on latest master
       ;;
     b) # Checkout new branch based on currently checked out branch
+      local branch=`create_branch_name $OPTARG`
       stash
-      exists $OPTARG && git checkout $OPTARG && return 0
-      git checkout -b $OPTARG
+      exists $branch && git checkout $branch && git up && return 0
+      git checkout -b $branch
       unstash
       return 0
       ;;
@@ -102,7 +111,6 @@ while getopts ":B:b:lmr:" opt; do
       usage
       return 1
       ;;
-
   esac
 done
 shift $((OPTIND -1))

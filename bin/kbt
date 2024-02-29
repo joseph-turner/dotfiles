@@ -3,6 +3,24 @@
 local current_branch=`git branch --show-current`
 local current_project=`basename $(git rev-parse --show-toplevel)`
 local current_project_branch="$current_project-${current_branch:l}"
+local current_context=`kubectl config current-context`
+local new_context=$current_context;
+
+while getopts ":c:" opt; do
+  case $opt in
+    c)
+      [[ $OPTARG != $current_context ]] && new_context=$OPTARG && kubectl config use-context $OPTARG
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG"
+      return 1
+      ;;
+    :)
+      echo "Context name needed with the -c flag"
+      return 1
+      ;;
+  esac
+done
 
 local branch_pod=`kubectl get pods | awk -v var=$current_project_branch '$0 ~ var {print $1}'`
 
@@ -11,3 +29,5 @@ if [[ -n $branch_pod ]]; then
 else
     echo "No pod found for $current_branch"
 fi
+
+[[ $new_context != $current_context ]] && kubectl config use-context $current_context

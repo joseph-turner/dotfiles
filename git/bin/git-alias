@@ -1,0 +1,22 @@
+#!/bin/zsh
+
+usage() {
+cat <<HERE
+usage: git alias                         # list all aliases
+   or: git alias <search-pattern>        # show aliases matching pattern
+   or: git alias <alias-name> <command>  # alias a command
+HERE
+}
+
+case $# in
+  0)
+    git config --get-regexp 'alias.*' | sed 's/^alias\.//' | sed 's/[ ]/ = /' | sort
+    ;;
+  1)
+    git alias | grep -e "$1" || echo "No alias set for \"$1\""
+    ;;
+  2)
+    git config --global alias."$1" "$2"
+    ;;
+  *) >&2 echo "error: too many arguments." && usage && exit 1 ;;
+esac

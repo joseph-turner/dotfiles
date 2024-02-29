@@ -42,6 +42,7 @@ casks=(
   qlvideo # Preview most types of video files, as well as their thumbnails, cover art and metadata
   quicklook-json # Preview JSON files
   # quicklookase # Preview Adobe ASE Color Swatches generated with Adobe Photoshop, Adobe Illustrator, Adobe Color CC, Spectrum, COLOURlovers, Prisma, among many others.
+  vanilla # Tool to hide menu bar icons
   webpquicklook # Preview WebP images
 )
 
@@ -60,7 +61,9 @@ fonts=(
   # FONTS
   # Patched by Nerd Font
   font-fira-code-nerd-font
+  font-iosevka-nerd-font
   font-meslo-lg-nerd-font
+  font-monocraft-nerd-font
   font-sauce-code-pro-nerd-font
 )
 

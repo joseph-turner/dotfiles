@@ -12,6 +12,8 @@ zstyle ':completion:*:descriptions' format '%B%d%b'
 zstyle ':completion:*:messages' format '%d'
 zstyle ':completion:*:warnings' format 'No matches for: %d'
 zstyle ':completion:*' group-name ''
+zstyle ':completion:*:*:docker:*' option-stacking yes
+zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
 # case-insensitive (all), partial-word and then substring completion
 zstyle ":completion:*" matcher-list \
@@ -32,3 +34,5 @@ for i in ${files[@]}; do
     # echo "$i not found"
   fi
 done
+
+source <(kubectl completion zsh)

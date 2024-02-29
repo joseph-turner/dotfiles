@@ -1,0 +1,20 @@
+#!/bin/zsh
+#compdef dev
+
+autoload colors; colors
+
+_dev() {
+    _arguments \
+        '-o[ostk]:directories:__ls_ostk' \
+        '-p[personal]:directories:__ls_personal'
+
+}
+__ls_ostk() {
+    dirs=`ls "$HOME/OSTK/SUI"`
+    _values "$fg[cyan]ostk$reset_color" $(echo $dirs)
+}
+
+__ls_personal() {
+    dirs=`ls "$HOME/PERSONAL"`
+    _values "$fg[cyan]personal$reset_color" $(echo $dirs)
+}

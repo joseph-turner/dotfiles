@@ -5,7 +5,7 @@ autoload colors; colors
 local success
 
 function push() {
-  echo "\nPushing changes...\n"
+  echo "\n$fg[blue]Pushing changes...\n$reset_color"
   # check for remote tracking branch and push changes creating a new remote branch if one doesn't exist
   if [[ -z $(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)) ]]; then
     git push -u origin $(git rev-parse --abbrev-ref HEAD);

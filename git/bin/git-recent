@@ -30,7 +30,7 @@ while getopts "hn:ler" opt; do
 done
 shift $((OPTIND -1))
 
-NUM=${NUM-10} # default to 10 lines
+NUM=${NUM-9} # default to 9 lines
 INTERACTIVE=${INTERACTIVE-1} # default to interactive
 
 BRANCHES=(
@@ -46,7 +46,7 @@ BRANCHES=(
   )
 )
 
-[ $# -eq 1 ] && git checkout "${BRANCHES[$1]}" && exit 0
+[ $# -eq 1 ] && git co "${BRANCHES[$1]}" && exit 0
 
 if [[ $INTERACTIVE = '1' ]]; then
   PS3=$'\nChoose a branch: '
@@ -56,7 +56,7 @@ if [[ $INTERACTIVE = '1' ]]; then
     echo ">>> Invalid Selection";
   done
 
-  git checkout "$d"
+  git co "$d"
 else
   for i in {1..$#BRANCHES}; do
     printf '%s\n' "$i=${BRANCHES[i]}"

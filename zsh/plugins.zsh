@@ -24,6 +24,8 @@ zinit wait lucid for \
   OMZP::asdf \
   OMZP::brew \
   OMZP::colored-man-pages \
+  OMZP::docker \
+  OMZP::kubectl \
   OMZP::node \
   OMZP::npm \
   OMZP::sudo \

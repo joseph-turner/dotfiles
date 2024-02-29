@@ -28,8 +28,8 @@ alias lsal='ls -al'
 
 alias firefox="/Applications/Firefox.app/Contents/MacOS/firefox"
 ! type code &> /dev/null && type code-insiders &> /dev/null && alias code="code-insiders"
-alias c.="code ."
-alias ci="code"
+alias c.="code -n ."
+alias ci="code -n"
 alias ci.="c."
 
 alias config="code $(dirname ${0:a:h})"
@@ -45,6 +45,7 @@ alias ytf="yt && yf"
 alias ytw="y test:watch"
 alias yst="y && y start"
 alias yt="y test"
+alias yti="y test:integration"
 alias ytw="y test:watch"
 # yarn charles => yarn chuck => yuck
 alias yuck="y charles"
