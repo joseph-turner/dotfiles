@@ -1,7 +1,7 @@
 #!/bin/zsh
 # https://github.com/kaicataldo/dotfiles/blob/master/bin/install.sh
 
-# This symlinks all the dotfiles (and .atom/) to ~/
+# This symlinks all the dotfiles
 # It also symlinks ~/bin for easy updating
 
 # This is safe to run multiple times and will prompt you about anything unclear
@@ -92,6 +92,8 @@ symlink_files() {
 
     'zsh/.zshrc'
     'zsh/.p10k.zsh'
+    .nvmrc
+    .tool-versions
   )
 
   for i in ${FILES_TO_SYMLINK[@]}; do
@@ -121,8 +123,8 @@ symlink_files() {
 symlink_binaries() {
 
   # Copy binaries
-  ln -fs $DOTFILES_DIR/git/bin $DOTFILES_DIR/bin/git
   ln -fs $DOTFILES_DIR/bin $HOME
+  ln -fs $DOTFILES_DIR/git/bin $DOTFILES_DIR/bin/git
 
   declare -a BINARIES=(
     'bounce'
@@ -158,18 +160,6 @@ if answer_is_yes; then
 
   # iterm2 shell integration
   curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh
-fi
-
-ask_for_confirmation "Run Homebrew Cask Script?"
-if answer_is_yes; then
-  chmod +rwx $SCRIPT_DIR/brew-cask.zsh
-  $SCRIPT_DIR/brew-cask.zsh
-fi
-
-ask_for_confirmation "Run Node Script?"
-if answer_is_yes; then
-  chmod +rwx $SCRIPT_DIR/node.zsh
-  $SCRIPT_DIR/node.zsh
 fi
 
 cd "$CURRENT_DIR"

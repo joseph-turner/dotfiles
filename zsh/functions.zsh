@@ -46,9 +46,6 @@ function gz() {
 function update() {
   echo "Updating and cleaning up homebrew stuff"
   brew update && brew outdated && brew upgrade && brew cleanup
-
-  echo "Installing latest LTS version of Node"
-  asdf install --lts && asdf current
 }
 
 function chrome() {
@@ -137,15 +134,22 @@ function reload() {
 }
 
 autoload -U add-zsh-hook
-load-asdf-nodejs() {
-  if [[ ! $(node -v &> /dev/null) ]]; then
-    if [[ -f "./.nvmrc" || -f "./.tool-versions" ]]; then
-      asdf install &> /dev/null
-    fi
+load-volta-nodejs() {
+  local NODE_VERSION="lts"
+
+  # Use .nvmrc if it exists
+  if [ -f .nvmrc ]; then
+    NODE_VERSION=$(cat .nvmrc)
+  fi
+
+  # Check if the Node.js version is installed
+  if ! volta list node | grep -q "$NODE_VERSION"; then
+    echo "⚡ Installing Node.js $NODE_VERSION with Volta..."
+    volta install node@"$NODE_VERSION"
   fi
 }
-add-zsh-hook chpwd load-asdf-nodejs
-load-asdf-nodejs
+add-zsh-hook chpwd load-volta-nodejs
+load-volta-nodejs
 
 # changes directory to project directory and opens project in vs code
 dev() {

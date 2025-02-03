@@ -19,9 +19,11 @@ autoload -Uz _zinit
 
 zinit light romkatv/powerlevel10k
 
+# installs volta then its completions
+zinit ice from"gh" pick"volta/volta" atload'volta completions zsh' atclone'volta install' atpull'%atclone' lucid
+
 zinit wait lucid for \
   b4b4r07/enhancd \
-  OMZP::asdf \
   OMZP::brew \
   OMZP::colored-man-pages \
   OMZP::docker \
@@ -34,7 +36,3 @@ zinit wait lucid for \
     zdharma-continuum/fast-syntax-highlighting \
     zsh-users/zsh-completions \
     zsh-users/zsh-autosuggestions \
-
-if [[ ! $(asdf plugin list) =~ 'nodejs' ]]; then
-  asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-fi

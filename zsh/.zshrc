@@ -33,6 +33,7 @@ dirs_to_prepend=(
   "$BREW_DIR"
   "$HOME/bin"
   "$HOME/bin/git"
+  "$HOME/.pyenv/shims"
 )
 
 # Explicitly configured $PATH
@@ -66,7 +67,6 @@ export GIT_FRIENDLY_NO_COMPOSER=true
 local sources=(
   "$HOME/.zshrc.local"
   "$HOME/.iterm2_shell_integration.zsh"
-  "/opt/homebrew/opt/asdf/libexec/asdf.sh"
 )
 
 # This will grab all of the zsh files in the $DOTFILES_DIR/zsh folder
@@ -91,12 +91,15 @@ done
 # =============================================================================
 
 # kubectl config settings
-KUBEDIR="$HOME/.kube"
-KUBECONFIG=""
-for kubeconfig_file in $KUBEDIR/*(.); do
-  KUBECONFIG+=:$kubeconfig_file
-done
-export KUBECONFIG
+if command -v kubectl &> /dev/null; then
+  KUBEDIR="$HOME/.kube"
+  [[ ! -d $KUBEDIR ]] && mkdir -p $KUBEDIR
+  KUBECONFIG=""
+  for kubeconfig_file in $KUBEDIR/*(.); do
+    KUBECONFIG+=:$kubeconfig_file
+  done
+  export KUBECONFIG
+fi
 
 # improved less option
 export LESS="-FiJMRWX -x4 -z-4 --tabs=4 --no-init --LONG-PROMPT --ignore-case --quit-if-one-screen --RAW-CONTROL-CHARS"
