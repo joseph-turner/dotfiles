@@ -42,11 +42,25 @@ unstash() {
 }
 
 create_branch_name() {
-  local today=`date +%b%-d`
-  if [[ $1 =~ "${today:l}-jt-" ]]; then
-    branch=$1
-  else
-    branch=${today:l}-jt-$1
+  local branch=$1
+  if [[ ! $branch =~ ^(feature|bugfix|hotfix|chore|experiment)\/ ]]; then
+    read "branch_type?Branch name does not have a standard prefix.
+  Please select the type of branch to create:
+  1) feature
+  2) bugfix
+  3) hotfix
+  4) chore
+  5) experiment
+  Enter the number corresponding to the branch type: "
+    case $branch_type in
+      1) prefix="feature/" ;;
+      2) prefix="bugfix/" ;;
+      3) prefix="hotfix/" ;;
+      4) prefix="chore/" ;;
+      5) prefix="experiment/" ;;
+      *) echo "Invalid selection. Defaulting to feature/"; prefix="feature/" ;;
+    esac
+    branch="${prefix}${branch}"
   fi
   echo $branch
 }
@@ -66,7 +80,9 @@ g_cmb() {
 
   # echo $branch
   stash
-  git checkout $default_branch
+  if [[ $(git symbolic-ref --short -q HEAD) != $default_branch ]]; then
+    git checkout $default_branch
+  fi
   git up || echo "\n$fg[yellow]Pull failed. Don't forget to rebase $default_branch$reset_color\n"
   git checkout -b $branch
   ask_unstash
@@ -75,8 +91,8 @@ g_cmb() {
 
 while getopts ":B:b:lmr:" opt; do
   case ${opt} in
-    B)
-      git check-connection && g_cmb $OPTARG# Checkout new branch based on latest master
+    B) # Checkout new branch based on latest master
+      git check-connection && g_cmb $OPTARG
       ;;
     b) # Checkout new branch based on currently checked out branch
       local branch=`create_branch_name $OPTARG`

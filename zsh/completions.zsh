@@ -23,6 +23,8 @@ zstyle ":completion:*" matcher-list \
 
 zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}
 
+[[ ! -d $HOME/.cache/zinit/completions ]] && mkdir -p $HOME/.cache/zinit/completions
+
 completions_dir="$(dirname $(readlink $HOME/.zshrc))/completions"
 local files=( $completions_dir/* )
 

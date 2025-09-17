@@ -100,12 +100,18 @@ done
 
 # kubectl config settings
 if command -v kubectl &> /dev/null; then
+  echo "kubectl found"
   KUBEDIR="$HOME/.kube"
   [[ ! -d $KUBEDIR ]] && mkdir -p $KUBEDIR
   KUBECONFIG=""
-  for kubeconfig_file in $KUBEDIR/*(.); do
-    KUBECONFIG+=:$kubeconfig_file
-  done
+
+  # check if there are any kubeconfig files in the kube directory
+  if [[ ! -z $(ls -A $KUBEDIR) ]]; then
+    for kubeconfig_file in $KUBEDIR/*(.); do
+      KUBECONFIG+=:$kubeconfig_file
+    done
+  fi
+
   export KUBECONFIG
 fi
 

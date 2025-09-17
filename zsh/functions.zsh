@@ -59,8 +59,9 @@ function chrome() {
 }
 
 function gclone() {
-  g clone $@
-  [[ -n $2 ]] && cd $2 || cd "$(basename $_ .git)"
+  git clone "$@" || return 1
+  local target_dir="${2:-$(basename "$1" .git)}"
+  [[ -d "$target_dir" ]] && cd "$target_dir"
 }
 
 function ip() {
