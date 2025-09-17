@@ -2,6 +2,12 @@
 #                                Key Bindings
 # =============================================================================
 
+# Guard against double-sourcing
+if [[ -n ${ZSH_KEYBINDINGS_LOADED+x} ]]; then
+	return 0
+fi
+ZSH_KEYBINDINGS_LOADED=1
+
 # Do not require a space when attempting to tab-complete.
 bindkey "^i" expand-or-complete-prefix
 
@@ -17,8 +23,8 @@ bindkey '^[A' beginning-of-line
 bindkey '^[E' end-of-line
 
 # Delete word with opt-backspace/opt-delete
-bindkey '[G' backward-kill-word
-bindkey '[H' kill-word
+bindkey '^[G' backward-kill-word
+bindkey '^[H' kill-word
 
 # Delete line with cmd-backspace/cmd-delete
 bindkey '[I' backward-kill-line

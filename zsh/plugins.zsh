@@ -3,9 +3,16 @@
 # =============================================================================
 autoload colors; colors
 
-# Check if zinit is installed
+# Guard against double-sourcing
+if [[ -n ${ZSH_PLUGINS_LOADED+x} ]]; then
+  return 0
+fi
+ZSH_PLUGINS_LOADED=1
+
+# Check if zinit is installed. Install only in interactive shells to avoid network
+# operations during non-interactive runs.
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-if [[ ! -d $ZINIT_HOME ]]; then
+if [[ ! -d $ZINIT_HOME && -t 1 ]]; then
     print -P "$fg[blue]▓▒░ $fg[yellow]Installing $fg[blue]DHARMA $fg[yellow]Initiative Plugin Manager ($fg[blue]zdharma-continuum/zinit$fg[yellow])…$reset_color"
     command mkdir -p "$(dirname $ZINIT_HOME)"
     command git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME" && \
@@ -13,11 +20,13 @@ if [[ ! -d $ZINIT_HOME ]]; then
         print -P "$fg[red]▓▒░ The clone has failed.$reset_color"
 fi
 
-source "${ZINIT_HOME}/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
+if [[ -d $ZINIT_HOME ]]; then
+  source "${ZINIT_HOME}/zinit.zsh"
+  autoload -Uz _zinit
+  (( ${+_comps} )) && _comps[zinit]=_zinit
 
-zinit light romkatv/powerlevel10k
+  zinit light romkatv/powerlevel10k
+fi
 
 # installs volta then its completions
 zinit ice from"gh" pick"volta/volta" atload'volta completions zsh' atclone'volta install' atpull'%atclone' lucid

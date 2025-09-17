@@ -1,6 +1,12 @@
 #!/bin/zsh
 autoload colors; colors
 
+# Guard against double-sourcing
+if [[ -n ${ZSH_FUNCTIONS_LOADED+x} ]]; then
+  return 0
+fi
+ZSH_FUNCTIONS_LOADED=1
+
 # =============================================================================
 #                                   Functions
 # =============================================================================
@@ -144,7 +150,9 @@ load-volta-nodejs() {
 
   # Check if the Node.js version is installed
   if ! volta list node | grep -q "$NODE_VERSION"; then
-    echo "⚡ Installing Node.js $NODE_VERSION with Volta..."
+    if [[ -t 1 ]]; then
+      echo "⚡ Installing Node.js $NODE_VERSION with Volta..."
+    fi
     volta install node@"$NODE_VERSION"
   fi
 }

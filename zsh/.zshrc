@@ -12,20 +12,28 @@ autoload colors; colors
 
 export LANG="en_US.UTF-8"
 export LC_ALL="$LANG"
-
 # PATH
 # Directories to be prepended to $PATH
 # =============================================================================
 
-ZSH_SOURCES_DIR=$(dirname $(readlink $HOME/.zshrc))
-
-local BREW_DIR="/opt/homebrew/bin"
-if [[ ! -d $BREW_DIR ]]; then
-  echo "\n$fg[red]Brew directory has changed!$reset_color"
-  echo "$fg[blue]Update in $ZSH_SOURCES_DIR/.zshrc\n$reset_color"
+# Determine ZSH_SOURCES_DIR robustly. If ~/.zshrc is a symlink, resolve it; otherwise
+# use the directory that contains the real file. This avoids BSD/macOS readlink portability
+# issues when ~/.zshrc is not a symlink.
+if [[ -L "$HOME/.zshrc" ]]; then
+  ZSH_SOURCES_DIR=$(dirname "$(readlink "$HOME/.zshrc")")
+else
+  ZSH_SOURCES_DIR=$(dirname "$HOME/.zshrc")
 fi
 
-local -a dirs_to_prepend
+BREW_DIR="/opt/homebrew/bin"
+if [[ ! -d $BREW_DIR ]]; then
+  if [[ -t 1 ]]; then
+    echo "\n$fg[red]Brew directory has changed!$reset_color"
+    echo "$fg[blue]Update in $ZSH_SOURCES_DIR/.zshrc\n$reset_color"
+  fi
+fi
+
+# Directories to prepend to PATH if they exist.
 dirs_to_prepend=(
   "/opt/local/bin"
   "/usr/local/sbin"
@@ -34,14 +42,15 @@ dirs_to_prepend=(
   "$HOME/bin"
   "$HOME/bin/git"
   "$HOME/.pyenv/shims"
+  "$HOME/.volta/bin"
 )
 
-# Explicitly configured $PATH
+# Explicitly configured $PATH (base)
 PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
-for dir in ${(k)dirs_to_prepend[@]}; do
-  if [ -d ${dir} ]; then
-    # If these directories exist, then prepend them to existing PATH
+for dir in ${dirs_to_prepend[@]}; do
+  if [[ -d ${dir} ]]; then
+    # If these directories exist, prepend them to existing PATH
     PATH="${dir}:$PATH"
   fi
 done
@@ -49,9 +58,8 @@ done
 unset dirs_to_prepend
 
 export PATH
-completions_dir="$(dirname $(readlink $HOME/.zshrc))/completions"
+completions_dir="$(dirname "$HOME/.zshrc")/completions"
 fpath=($completions_dir ~/bin "${fpath[@]}" )
-
 export GIT_FRIENDLY_NO_BUNDLE=true
 # export GIT_FRIENDLY_NO_NPM=true
 export GIT_FRIENDLY_NO_YARN=true
@@ -64,7 +72,7 @@ export GIT_FRIENDLY_NO_COMPOSER=true
 # =============================================================================
 
 # List of files that need to be sourced outside of the dotfiles dir
-local sources=(
+sources=(
   "$HOME/.zshrc.local"
   "$HOME/.iterm2_shell_integration.zsh"
 )
@@ -141,3 +149,38 @@ compdef _gatsby gatsby
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Compile frequently-sourced zsh files to .zwc if missing or stale.
+# Run in background so shell startup isn't noticably blocked.
+compile_dotfiles_zsh_if_needed() {
+  command -v zcompile >/dev/null || return 0
+  # Only for interactive shells
+  [[ $- == *i* ]] || return 0
+
+  ZSH_DIR="$(dirname "$HOME/.zshrc")"
+  local files=(functions.zsh aliases.zsh keybindings.zsh plugins.zsh)
+  local src zwc needs_compile=0
+
+  for f in "${files[@]}"; do
+    src="$ZSH_DIR/$f"
+    zwc="$src.zwc"
+    [[ -f "$src" ]] || continue
+    if [[ ! -f "$zwc" || "$src" -nt "$zwc" ]]; then
+      needs_compile=1
+      break
+    fi
+  done
+
+  [[ $needs_compile -eq 1 ]] || return 0
+
+  (
+    for f in "${files[@]}"; do
+      src="$ZSH_DIR/$f"
+      [[ -f "$src" ]] || continue
+      zcompile -u "$src" 2>/dev/null || true
+    done
+  ) & disown
+}
+
+# Trigger background compile if needed
+compile_dotfiles_zsh_if_needed

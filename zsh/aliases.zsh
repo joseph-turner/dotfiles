@@ -2,6 +2,12 @@
 #                                   Aliases
 # =============================================================================
 
+# Guard against double-sourcing
+if [[ -n ${ZSH_ALIASES_LOADED+x} ]]; then
+  return 0
+fi
+ZSH_ALIASES_LOADED=1
+
 # In the definitions below, you will see use of function definitions instead of
 # aliases for some cases. We use this method to avoid expansion of the alias in
 # combination with the globalias plugin.
@@ -11,7 +17,7 @@ export CLICOLOR="YES" # Equivalent to passing -G to ls.
 export LSCOLORS="exgxdHdHcxaHaHhBhDeaec"
 
 # Prefer GNU version, since it respects dircolors.
-if which gls &>/dev/null; then
+if command -v gls &>/dev/null; then
   alias ls='() { $(whence -p gls) -Ctr --file-type --color=auto $@ }'
 else
   alias ls='() { $(whence -p ls) -CFtr $@ }'
