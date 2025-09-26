@@ -1,17 +1,45 @@
 #!/bin/zsh
 
+# Small helper to check network reachability for the git remote host.
+# Supports remote URLs like:
+#   - https://github.com/owner/repo.git
+#   - git@github.com:owner/repo.git
+#   - ssh://git@github.com/owner/repo.git
+#   - git://github.com/owner/repo.git
+
 autoload colors; colors
 
-local remote_url=$(git remote get-url origin | cut -d'/' -f3)
+# Get the remote URL for origin (fail if none)
+remote_url_raw=$(git remote get-url origin 2>/dev/null)
+if [[ -z $remote_url_raw ]]; then
+  echo "$fg[red]No remote named 'origin' found.$reset_color"
+  exit 1
+fi
 
+# Extract hostname from a variety of git remote URL formats
+if [[ $remote_url_raw == *"@"* ]]; then
+  # Handles: git@host:owner/repo.git or user@host:/path
+  host=${remote_url_raw#*@}
+  host=${host%%[:/]*}
+else
+  # Handles: https://host/... , ssh://host/... , git://host/...
+  no_proto=${remote_url_raw#*://}
+  host=${no_proto%%/*}
+fi
 
 ping_remote() {
-  echo "$fg[cyan]Checking connection to repo$reset_color"
-  ping -c1 -t2 $remote_url 2>&1 >/dev/null && echo "$fg[green]Connection successful$reset_color"
+  echo "$fg[cyan]Checking connection to repo host $fg_bold[white]$host$reset_color"
+  # Redirect both stdout and stderr to /dev/null; return true on success.
+  if ping -c1 "$host" >/dev/null 2>&1; then
+    echo "$fg[green]Connection successful$reset_color"
+    return 0
+  fi
+  return 1
 }
 
 while ! ping_remote; do
-  echo "\n$fg[red]Can't reach $fg_bold[white]$remote_url$reset_color"
-  read -sk "?Check connection and press any key to try again"$'\n'
+  echo "\n$fg[red]Can't reach $fg_bold[white]$host$reset_color"
+  # Wait for a keypress before retrying (silent)
+  read -k "?Check connection and press any key to try again"$'\n'
   echo
 done
