@@ -15,19 +15,18 @@ bindkey "^i" expand-or-complete-prefix
 bindkey '^[[3~' delete-char
 
 # Skip forward/back a word with opt-arrow
-bindkey '[C' forward-word
-bindkey '[D' backward-word
+bindkey '[[1;3C' forward-word
+bindkey '[[1;3D' backward-word
 
 # Skip to start/end of line with cmd-arrow
-bindkey '^[A' beginning-of-line
-bindkey '^[E' end-of-line
+bindkey '^[[D' beginning-of-line
+bindkey '^[[C' end-of-line
 
 # Delete word with opt-backspace/opt-delete
 bindkey '^[G' backward-kill-word
-bindkey '^[H' kill-word
+bindkey '^[[3;3~' kill-word
 
 # Delete line with cmd-backspace/cmd-delete
-bindkey '[I' backward-kill-line
 bindkey '^[I' backward-kill-line
 bindkey '^[K' kill-line
 
