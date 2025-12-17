@@ -19,8 +19,8 @@ bindkey '[[1;3C' forward-word
 bindkey '[[1;3D' backward-word
 
 # Skip to start/end of line with cmd-arrow
-bindkey '^[[D' beginning-of-line
-bindkey '^[[C' end-of-line
+bindkey '^[A' beginning-of-line
+bindkey '^[E' end-of-line
 
 # Delete word with opt-backspace/opt-delete
 bindkey '^[G' backward-kill-word

@@ -108,19 +108,19 @@
   helper = osxkeychain
 
 [diff]
-  tool = vscode
+  tool = windsurf
 
-[difftool "vscode"]
-  cmd = code --wait --diff $LOCAL $REMOTE
+[difftool "windsurf"]
+  cmd = surf --wait --diff $LOCAL $REMOTE
 
 [help]
   autocorrect = 1
 
 [merge]
-  tool = vscode
+  tool = windsurf
 
-[mergetool "vscode"]
-  cmd = code --wait $MERGED
+[mergetool "windsurf"]
+  cmd = surf --wait $MERGED
 
 [mergetool]
   keepBackup = false
@@ -131,4 +131,4 @@
 # This is Git's per-user configuration file.
 [user]
   name  = Joseph Turner
-  email = iamjoeturner@gmail.com
+  email = jturner@bamboohr.com

@@ -12,13 +12,17 @@ autoload colors; colors
 
 export LANG="en_US.UTF-8"
 export LC_ALL="$LANG"
-# PATH
-# Directories to be prepended to $PATH
+
 # =============================================================================
+#                                     PATH
+# =============================================================================
+
+# Directories to be prepended to $PATH
 
 # Determine ZSH_SOURCES_DIR robustly. If ~/.zshrc is a symlink, resolve it; otherwise
 # use the directory that contains the real file. This avoids BSD/macOS readlink portability
 # issues when ~/.zshrc is not a symlink.
+
 if [[ -L "$HOME/.zshrc" ]]; then
   ZSH_SOURCES_DIR=$(dirname "$(readlink "$HOME/.zshrc")")
 else
@@ -43,6 +47,7 @@ dirs_to_prepend=(
   "$HOME/bin/git"
   "$HOME/.pyenv/shims"
   "$HOME/.volta/bin"
+  "$HOME/.codeium/windsurf/bin"
 )
 
 # Explicitly configured $PATH (base)
@@ -60,6 +65,7 @@ unset dirs_to_prepend
 export PATH
 completions_dir="$(dirname "$HOME/.zshrc")/completions"
 fpath=($completions_dir ~/bin "${fpath[@]}" )
+
 export GIT_FRIENDLY_NO_BUNDLE=true
 # export GIT_FRIENDLY_NO_NPM=true
 export GIT_FRIENDLY_NO_YARN=true
@@ -190,3 +196,97 @@ compile_dotfiles_zsh_if_needed() {
 
 # Trigger background compile if needed
 compile_dotfiles_zsh_if_needed
+# BEGIN_AWS_SSO_CLI
+
+# AWS SSO requires `bashcompinit` which needs to be enabled once and
+# only once in your shell.  Hence we do not include the two lines:
+#
+# autoload -Uz +X compinit && compinit
+# autoload -Uz +X bashcompinit && bashcompinit
+#
+# If you do not already have these lines, you must COPY the lines 
+# above, place it OUTSIDE of the BEGIN/END_AWS_SSO_CLI markers
+# and of course uncomment it
+
+__aws_sso_profile_complete() {
+     local _args=${AWS_SSO_HELPER_ARGS:- -L error}
+    _multi_parts : "($(/opt/homebrew/bin/aws-sso ${=_args} list --csv Profile))"
+}
+
+aws-sso-profile() {
+    local _args=${AWS_SSO_HELPER_ARGS:- -L error}
+    local _sso=""
+    local _profile=""
+    
+    if [ -n "$AWS_PROFILE" ]; then
+        echo "Unable to assume a role while AWS_PROFILE is set"
+        return 1
+    fi
+
+    # Parse arguments
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -S|--sso)
+                shift
+                if [ -z "$1" ]; then
+                    echo "Error: -S/--sso requires an argument"
+                    return 1
+                fi
+                _sso="$1"
+                shift
+                ;;
+            -*)
+                echo "Unknown option: $1"
+                echo "Usage: aws-sso-profile [-S|--sso <sso-instance>] <profile>"
+                return 1
+                ;;
+            *)
+                if [ -z "$_profile" ]; then
+                    _profile="$1"
+                else
+                    echo "Error: Multiple profiles specified"
+                    return 1
+                fi
+                shift
+                ;;
+        esac
+    done
+
+    if [ -z "$_profile" ]; then
+        echo "Usage: aws-sso-profile [-S|--sso <sso-instance>] <profile>"
+        return 1
+    fi
+
+    # Build and execute the eval command with optional SSO flag
+    if [ -n "$_sso" ]; then
+        eval $(/opt/homebrew/bin/aws-sso ${=_args} -S "$_sso" eval -p "$_profile")
+    else
+        eval $(/opt/homebrew/bin/aws-sso ${=_args} eval -p "$_profile")
+    fi
+    
+    if [ "$AWS_SSO_PROFILE" != "$_profile" ]; then
+        return 1
+    fi
+}
+
+aws-sso-clear() {
+    local _args=${AWS_SSO_HELPER_ARGS:- -L error}
+    if [ -z "$AWS_SSO_PROFILE" ]; then
+        echo "AWS_SSO_PROFILE is not set"
+        return 1
+    fi
+    eval $(/opt/homebrew/bin/aws-sso ${=_args} eval -c)
+}
+
+compdef __aws_sso_profile_complete aws-sso-profile
+complete -C /opt/homebrew/bin/aws-sso aws-sso
+
+# END_AWS_SSO_CLI
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/jturner/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)

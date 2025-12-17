@@ -4,7 +4,8 @@
 #                                 Completions
 # =============================================================================
 autoload colors; colors
-autoload compinit; compinit
+autoload -Uz +X compinit && compinit
+autoload -Uz +X bashcompinit && bashcompinit
 
 zstyle ':completion:*' rehash true
 zstyle ':completion:*' verbose yes

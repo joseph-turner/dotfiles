@@ -1,4 +1,5 @@
 {
     "todo-tree.tree.showBadges": true,
-    "workbench.colorTheme": "Night Owl Light"
+    "workbench.colorTheme": "Solarized Dark",
+    "window.autoDetectColorScheme": true
 }

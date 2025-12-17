@@ -1,3 +1,4 @@
 bin/git
 .history/
 .env.*
+zsh/*.local.zsh
