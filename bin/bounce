@@ -20,20 +20,130 @@ usage() {
 }
 
 inst() {
-  echo
-  echo "Installing modules..."
-  echo
-  yarn
+  pm_install
 }
 
 reinst() {
+  pm_reinstall
+}
+
+detect_pm() {
+  PM=""
+  if [[ -f package.json ]]; then
+    pkg_pm=$(grep -Po '"packageManager"\s*:\s*"\K[^"]+' package.json 2>/dev/null || true)
+    if [[ -n "$pkg_pm" ]]; then
+      case "$pkg_pm" in
+        pnpm*) PM=pnpm ;;
+        yarn*) PM=yarn ;;
+        npm*) PM=npm ;;
+        bun*) PM=bun ;;
+      esac
+    fi
+  fi
+
+  if [[ -z "$PM" ]]; then
+    if [[ -f pnpm-lock.yaml ]]; then
+      PM=pnpm
+    elif [[ -f yarn.lock ]]; then
+      PM=yarn
+    elif [[ -f package-lock.json ]]; then
+      PM=npm
+    elif [[ -f bun.lockb ]]; then
+      PM=bun
+    fi
+  fi
+
+  if [[ -z "$PM" ]]; then
+    if command -v pnpm >/dev/null 2>&1; then
+      PM=pnpm
+    elif command -v yarn >/dev/null 2>&1; then
+      PM=yarn
+    elif command -v npm >/dev/null 2>&1; then
+      PM=npm
+    elif command -v bun >/dev/null 2>&1; then
+      PM=bun
+    else
+      PM=npm
+    fi
+  fi
+}
+
+pm_install() {
+  detect_pm
+  echo
+  echo "Installing modules with $PM..."
+  case "$PM" in
+    yarn)
+      yarn install
+      ;;
+    pnpm)
+      pnpm install
+      ;;
+    bun)
+      bun install
+      ;;
+    npm)
+      if [[ -f package-lock.json ]]; then
+        npm ci || npm install
+      else
+        npm install
+      fi
+      ;;
+    *)
+      npm install
+      ;;
+  esac
+}
+
+pm_reinstall() {
+  detect_pm
   echo
   echo "removing ./node_modules"
   rm -rf "./node_modules"
   echo
-  echo "Reinstalling modules..."
-  echo
-  yarn
+  echo "Reinstalling modules with $PM..."
+  case "$PM" in
+    yarn)
+      yarn install
+      ;;
+    pnpm)
+      pnpm install
+      ;;
+    bun)
+      bun install
+      ;;
+    npm)
+      if [[ -f package-lock.json ]]; then
+        npm ci || npm install
+      else
+        npm install
+      fi
+      ;;
+    *)
+      npm install
+      ;;
+  esac
+}
+
+pm_check() {
+  detect_pm
+  case "$PM" in
+    yarn)
+      yarn check --verify-tree &> /dev/null
+      ;;
+    pnpm)
+      pnpm -v &> /dev/null && pnpm install --frozen-lockfile --reporter silent --lockfile-only &> /dev/null
+      ;;
+    npm)
+      npm ci --dry-run &> /dev/null || npm -s ls --depth=0 &> /dev/null
+      ;;
+    bun)
+      false
+      ;;
+    *)
+      false
+      ;;
+  esac
 }
 
 while getopts "fhs" opt; do
