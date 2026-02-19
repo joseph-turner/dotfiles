@@ -98,9 +98,6 @@ pm_install() {
 pm_reinstall() {
   detect_pm
   echo
-  echo "removing ./node_modules"
-  rm -rf "./node_modules"
-  echo
   echo "Reinstalling modules with $PM..."
   case "$PM" in
     yarn)

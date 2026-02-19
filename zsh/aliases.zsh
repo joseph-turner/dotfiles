@@ -38,7 +38,7 @@ alias c.="code -n ."
 alias ci="code -n"
 alias ci.="c."
 
-alias config="code $(dirname ${0:a:h})"
+alias config="surf $(dirname ${0:a:h})"
 
 alias p="pnpm"
 alias pb="p build"
